@@ -1,5 +1,4 @@
 import 'package:template/utils/app_colors.dart';
-import 'package:template/utils/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:template/utils/app_texts.dart';
@@ -27,13 +26,13 @@ class CustomTextField extends StatefulWidget {
     this.trailing,
     this.isPassword = false,
     this.isDisabled = false,
-    this.radius = 50,
+    this.radius = 10,
     this.lines = 1,
     this.textInputType,
     this.controller,
     this.onTap,
     this.errorText,
-    this.height = 50,
+    this.height = 46,
     this.width,
   });
 
@@ -71,7 +70,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
         if (widget.title != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 4.0),
-            child: Text(widget.title!, style: AppTexts.tsmr),
+            child: Text(
+              widget.title!,
+              style: AppTexts.txsm.copyWith(color: AppColors.gray.shade500),
+            ),
           ),
         GestureDetector(
           onTap: () {
@@ -87,15 +89,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
             height: widget.lines == 1 ? widget.height : null,
             width: widget.width,
             padding: EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: widget.lines == 1 ? 0 : 20,
+              horizontal: 14,
+              vertical: widget.lines == 1 ? 0 : 14,
             ),
             decoration: BoxDecoration(
-              color: AppColors.black[400],
               borderRadius: BorderRadius.circular(widget.radius),
-              border: isFocused
-                  ? Border.all(color: AppColors.blue)
-                  : Border.all(width: 0),
+              border: Border.all(
+                color: isFocused
+                    ? AppColors.gray.shade900
+                    : AppColors.gray.shade100,
+              ),
             ),
             child: Row(
               spacing: 12,
@@ -107,7 +110,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     height: 20,
                     width: 20,
                     colorFilter: ColorFilter.mode(
-                      isFocused ? AppColors.blue : AppColors.black.shade100,
+                      isFocused
+                          ? AppColors.gray.shade900
+                          : AppColors.gray.shade300,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -116,7 +121,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     focusNode: focusNode,
                     controller: widget.controller,
                     maxLines: widget.lines,
-                    cursorColor: AppColors.blue,
+                    cursorColor: AppColors.gray.shade900,
                     keyboardType: widget.textInputType,
                     obscureText: isObscured,
                     enabled: !widget.isDisabled && widget.onTap == null,
@@ -126,8 +131,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         focusNode.unfocus();
                       });
                     },
-                    style: AppTexts.tsmr.copyWith(
-                      color: AppColors.black.shade100,
+                    style: AppTexts.tsmm.copyWith(
+                      color: AppColors.gray.shade900,
                     ),
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -135,7 +140,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       contentPadding: EdgeInsets.zero,
                       hintText: widget.hintText,
                       hintStyle: AppTexts.tsmr.copyWith(
-                        color: AppColors.black[300],
+                        color: AppColors.gray[300],
                       ),
                     ),
                   ),
@@ -146,7 +151,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     height: 20,
                     width: 20,
                     colorFilter: ColorFilter.mode(
-                      isFocused ? AppColors.blue : AppColors.black.shade100,
+                      isFocused
+                          ? AppColors.gray.shade900
+                          : AppColors.gray.shade300,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -159,10 +166,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     },
                     behavior: HitTestBehavior.translucent,
                     child: SvgPicture.asset(
-                      isObscured ? AppIcons.eyeOff : AppIcons.eye,
+                      isObscured ? "assets/icons/eye_off.svg" : "assets/icons/eye.svg",
                       width: 20,
                       colorFilter: ColorFilter.mode(
-                        isFocused ? AppColors.blue : AppColors.black.shade100,
+                        AppColors.gray.shade900,
                         BlendMode.srcIn,
                       ),
                     ),

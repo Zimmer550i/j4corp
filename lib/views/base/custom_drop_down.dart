@@ -1,8 +1,7 @@
 import 'package:template/utils/app_colors.dart';
-import 'package:template/utils/app_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:template/utils/app_texts.dart';
+import 'package:template/utils/custom_svg.dart';
 
 class CustomDropDown extends StatefulWidget {
   final String? title;
@@ -20,8 +19,8 @@ class CustomDropDown extends StatefulWidget {
     this.hintText,
     required this.options,
     this.onChanged,
-    this.radius = 24,
-    this.height,
+    this.radius = 8,
+    this.height = 46,
     this.width,
   });
 
@@ -46,15 +45,13 @@ class _CustomDropDownState extends State<CustomDropDown> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8,
       children: [
         if (widget.title != null)
-          Text(
-            widget.title!,
-            style: TextStyle(
-              fontVariations: [FontVariation("wght", 600)],
-              fontSize: 16,
-              color: AppColors.blue[600],
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: Text(
+              widget.title!,
+              style: AppTexts.txsm.copyWith(color: AppColors.gray.shade500),
             ),
           ),
 
@@ -65,37 +62,48 @@ class _CustomDropDownState extends State<CustomDropDown> {
             });
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            constraints: BoxConstraints(minHeight: widget.height!),
             decoration: BoxDecoration(
-              color: AppColors.black[400],
+              color: AppColors.gray[50],
               borderRadius: BorderRadius.circular(widget.radius),
+              border: Border.all(
+                color: isExpanded
+                    ? AppColors.gray.shade900
+                    : AppColors.gray.shade100,
+              ),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: widget.height,
+                  height: widget.height ?? 50,
                   child: Row(
                     children: [
-                      currentVal == null
+                      const SizedBox(width: 14),
+                      currentVal == null || isExpanded
                           ? Text(
                               widget.hintText ?? "Select One",
                               style: AppTexts.tsmr.copyWith(
-                                color: AppColors.black.shade200,
+                                color: AppColors.gray.shade300,
                               ),
                             )
                           : Text(
                               currentVal!,
                               style: AppTexts.tsmr.copyWith(
-                                color: AppColors.black.shade50,
+                                color: AppColors.gray.shade900,
                               ),
                             ),
                       const Spacer(),
                       AnimatedRotation(
                         duration: defaultDuration,
                         turns: isExpanded ? 0.5 : 1,
-                        child: SvgPicture.asset(AppIcons.arrowDown),
+                        child: CustomSvg(
+                          asset: "assets/icons/drop_down.svg",
+                          color: AppColors.gray.shade900,
+                          size: 24,
+                        ),
                       ),
+                      const SizedBox(width: 14),
                     ],
                   ),
                 ),
@@ -117,24 +125,19 @@ class _CustomDropDownState extends State<CustomDropDown> {
                                   });
                                 },
                                 child: Container(
-                                  height: widget.height,
+                                  height: widget.height ?? 50,
+                                  padding: EdgeInsets.symmetric(horizontal: 14),
                                   decoration: BoxDecoration(
                                     border: Border(
                                       top: BorderSide(
-                                        color: AppColors.blue[400]!,
+                                        color: AppColors.gray,
                                         width: 0.5,
                                       ),
                                     ),
                                   ),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      e,
-                                      style: TextStyle(
-                                        color: AppColors.blue[50],
-                                        fontSize: 14,
-                                      ),
-                                    ),
+                                    child: Text(e, style: AppTexts.tsmr),
                                   ),
                                 ),
                               );

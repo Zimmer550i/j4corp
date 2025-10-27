@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/utils/app_colors.dart';
-import 'package:template/utils/app_icons.dart';
 import 'package:template/utils/app_texts.dart';
 import 'package:template/utils/custom_svg.dart';
 
@@ -16,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColors.black[600],
+      backgroundColor: AppColors.white,
       automaticallyImplyLeading: false,
       titleSpacing: 0,
       title: SizedBox(
@@ -31,26 +30,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 height: 32,
                 width: 32,
                 child: hasLeading
-                    ? Center(child: CustomSvg(asset: AppIcons.back))
+                    ? Center(child: CustomSvg(asset: "assets/icons/back.svg"))
                     : const SizedBox(),
               ),
             ),
             const SizedBox(width: 18),
-            Text(
-              title,
-              style: AppTexts.tsmr.copyWith(color: AppColors.black[50]),
+            Expanded(
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: AppTexts.tmdm.copyWith(color: AppColors.gray.shade900),
+              ),
             ),
+            const SizedBox(width: 62),
           ],
         ),
       ),
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(0.5),
-        child: Container(
-          height: 0.5,
-          width: double.infinity,
-          color: AppColors.black.shade300,
-        ),
-      ),
+      // bottom: PreferredSize(
+      //   preferredSize: Size.fromHeight(0.5),
+      //   child: Container(
+      //     height: 0.5,
+      //     width: double.infinity,
+      //     color: AppColors.indigo.shade300,
+      //   ),
+      // ),
     );
   }
 }
