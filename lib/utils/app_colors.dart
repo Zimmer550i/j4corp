@@ -82,5 +82,6 @@ class AppColors {
 
   // Individual Colors
   static const Color white = Color(0xFFFFFFFF);
+  static const Color offWhite = Color(0xFFEEEEEE);
   static const Color black = Color(0xFF000000);
 }

@@ -1,11 +1,10 @@
 import 'package:j4corp/themes/light_theme.dart';
-import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_constants.dart';
 import 'package:j4corp/utils/message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:j4corp/views/screens/design_system.dart';
+import 'package:j4corp/views/screens/auth/splash.dart';
 import 'controllers/localization_controller.dart';
 import 'controllers/theme_controller.dart';
 import 'helpers/di.dart' as di;
@@ -16,8 +15,8 @@ void main() async {
   Map<String, Map<String, String>> languages = await di.init();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-      statusBarColor: AppColors.indigo[600],
       statusBarIconBrightness: Brightness.light,
+      
     ),
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -49,7 +48,7 @@ class MyApp extends StatelessWidget {
               transitionDuration: const Duration(milliseconds: 500),
               getPages: AppRoutes.pages,
               // initialRoute: AppRoutes.splash,
-              home: DesignSystem(),
+              home: Splash(),
             );
           },
         );
