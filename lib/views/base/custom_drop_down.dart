@@ -8,7 +8,7 @@ class CustomDropDown extends StatefulWidget {
   final int? initialPick;
   final String? hintText;
   final List<String> options;
-  final double? height;
+  final double height;
   final double? width;
   final double radius;
   final void Function(String)? onChanged;
@@ -29,9 +29,23 @@ class CustomDropDown extends StatefulWidget {
 }
 
 class _CustomDropDownState extends State<CustomDropDown> {
+  // === Configurable UI Constants ===
+  final double horizontalPadding = 14;
+  final double verticalSpacing = 4;
+  final double iconSize = 24;
+  final double borderWidth = 0.5;
+
+  final Color backgroundColor = AppColors.gray[50]!;
+  final Color borderColorExpanded = AppColors.gray.shade900;
+  final Color borderColorCollapsed = AppColors.gray.shade100;
+  final Color hintTextColor = AppColors.gray.shade300;
+  final Color textColor = AppColors.gray.shade900;
+  final Color dividerColor = AppColors.gray;
+
+  final Duration animationDuration = const Duration(milliseconds: 100);
+
   String? currentVal;
   bool isExpanded = false;
-  Duration defaultDuration = const Duration(milliseconds: 100);
 
   @override
   void initState() {
@@ -48,10 +62,10 @@ class _CustomDropDownState extends State<CustomDropDown> {
       children: [
         if (widget.title != null)
           Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
+            padding: EdgeInsets.only(bottom: verticalSpacing),
             child: Text(
               widget.title!,
-              style: AppTexts.txsm.copyWith(color: AppColors.gray.shade500),
+              style: AppTexts.txsm.copyWith(color: hintTextColor),
             ),
           ),
 
@@ -62,53 +76,51 @@ class _CustomDropDownState extends State<CustomDropDown> {
             });
           },
           child: Container(
-            constraints: BoxConstraints(minHeight: widget.height!),
+            constraints: BoxConstraints(minHeight: widget.height),
             decoration: BoxDecoration(
-              color: AppColors.gray[50],
+              color: backgroundColor,
               borderRadius: BorderRadius.circular(widget.radius),
               border: Border.all(
-                color: isExpanded
-                    ? AppColors.gray.shade900
-                    : AppColors.gray.shade100,
+                color: isExpanded ? borderColorExpanded : borderColorCollapsed,
               ),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: widget.height ?? 50,
+                  height: widget.height,
                   child: Row(
                     children: [
-                      const SizedBox(width: 14),
+                      SizedBox(width: horizontalPadding),
                       currentVal == null || isExpanded
                           ? Text(
                               widget.hintText ?? "Select One",
                               style: AppTexts.tsmr.copyWith(
-                                color: AppColors.gray.shade300,
+                                color: hintTextColor,
                               ),
                             )
                           : Text(
                               currentVal!,
                               style: AppTexts.tsmr.copyWith(
-                                color: AppColors.gray.shade900,
+                                color: textColor,
                               ),
                             ),
                       const Spacer(),
                       AnimatedRotation(
-                        duration: defaultDuration,
+                        duration: animationDuration,
                         turns: isExpanded ? 0.5 : 1,
                         child: CustomSvg(
                           asset: "assets/icons/drop_down.svg",
-                          color: AppColors.gray.shade900,
-                          size: 24,
+                          color: textColor,
+                          size: iconSize,
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      SizedBox(width: horizontalPadding),
                     ],
                   ),
                 ),
                 AnimatedSize(
-                  duration: defaultDuration,
+                  duration: animationDuration,
                   child: isExpanded
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,13 +137,13 @@ class _CustomDropDownState extends State<CustomDropDown> {
                                   });
                                 },
                                 child: Container(
-                                  height: widget.height ?? 50,
-                                  padding: EdgeInsets.symmetric(horizontal: 14),
+                                  height: widget.height,
+                                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                                   decoration: BoxDecoration(
                                     border: Border(
                                       top: BorderSide(
-                                        color: AppColors.gray,
-                                        width: 0.5,
+                                        color: dividerColor,
+                                        width: borderWidth,
                                       ),
                                     ),
                                   ),

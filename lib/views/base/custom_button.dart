@@ -39,35 +39,49 @@ class CustomButton extends StatefulWidget {
 }
 
 class _CustomButtonState extends State<CustomButton> {
+  // === Configurable UI Constants ===
+  final Duration animationDuration = const Duration(milliseconds: 100);
+  final double loaderPadding = 8.0;
+  final double loaderStrokeWidth = 4.0;
+
+  final Color primaryColor = AppColors.gray.shade900;
+  final Color secondaryColor = AppColors.gray[50]!;
+  final Color disabledColor = AppColors.gray.shade300;
+  final Color borderColor = AppColors.gray.shade900;
+  final Color primaryTextColor = AppColors.white;
+  final Color secondaryTextColor = AppColors.gray.shade900;
+  final Color loaderColorPrimary = AppColors.gray[50]!;
+  final Color loaderColorSecondary = AppColors.gray;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(widget.radius),
       onTap: widget.isLoading ? null : widget.onTap,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 100),
+        duration: animationDuration,
         height: widget.height,
         width: widget.width,
         padding: EdgeInsets.symmetric(horizontal: widget.padding),
         decoration: BoxDecoration(
           color: widget.isSecondary
-              ? AppColors.gray[50]
+              ? secondaryColor
               : widget.isDisabled
-              ? AppColors.gray.shade300
-              : AppColors.gray.shade900,
+                  ? disabledColor
+                  : primaryColor,
           borderRadius: BorderRadius.circular(widget.radius),
-          border: Border.all(color: AppColors.gray.shade900),
+          border: Border.all(color: borderColor),
         ),
         child: widget.isLoading
             ? FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(loaderPadding),
                   child: CircularProgressIndicator(
                     color: widget.isSecondary
-                        ? AppColors.gray
-                        : AppColors.gray[50],
-                    strokeWidth: 4,
+                        ? loaderColorSecondary
+                        : loaderColorPrimary,
+                    strokeWidth: loaderStrokeWidth,
                   ),
                 ),
               )
@@ -83,8 +97,8 @@ class _CustomButtonState extends State<CustomButton> {
                       width: widget.iconSize,
                       colorFilter: ColorFilter.mode(
                         widget.isSecondary
-                            ? AppColors.gray.shade900
-                            : AppColors.white,
+                            ? secondaryTextColor
+                            : primaryTextColor,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -93,8 +107,8 @@ class _CustomButtonState extends State<CustomButton> {
                     style: AppTexts.tsmm.copyWith(
                       fontSize: widget.fontSize,
                       color: widget.isSecondary
-                          ? AppColors.gray.shade900
-                          : AppColors.white,
+                          ? secondaryTextColor
+                          : primaryTextColor,
                     ),
                   ),
                   if (widget.trailing != null)
@@ -104,8 +118,8 @@ class _CustomButtonState extends State<CustomButton> {
                       width: widget.iconSize,
                       colorFilter: ColorFilter.mode(
                         widget.isSecondary
-                            ? AppColors.gray.shade900
-                            : AppColors.white,
+                            ? secondaryTextColor
+                            : primaryTextColor,
                         BlendMode.srcIn,
                       ),
                     ),

@@ -41,6 +41,26 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  // === Configurable UI Constants ===
+  final double horizontalPadding = 14;
+  final double verticalPaddingMultiline = 14;
+  final double titleSpacing = 4;
+  final double iconSpacing = 12;
+  final double iconSize = 20;
+  final double errorTextPadding = 24;
+  final double borderWidth = 1.0;
+
+  final Color borderColorFocused = AppColors.gray.shade900;
+  final Color borderColorUnfocused = AppColors.gray.shade100;
+  final Color hintTextColor = AppColors.gray[300]!;
+  final Color textColor = AppColors.gray.shade900;
+  final Color iconColorFocused = AppColors.gray.shade900;
+  final Color iconColorUnfocused = AppColors.gray.shade300;
+  final Color titleTextColor = AppColors.gray.shade500;
+  final Color errorTextColor = AppColors.red;
+
+  final Duration animationDuration = const Duration(milliseconds: 100);
+
   bool isObscured = false;
   bool isFocused = false;
   final focusNode = FocusNode();
@@ -69,10 +89,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
       children: [
         if (widget.title != null)
           Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
+            padding: EdgeInsets.only(bottom: titleSpacing),
             child: Text(
               widget.title!,
-              style: AppTexts.txsm.copyWith(color: AppColors.gray.shade500),
+              style: AppTexts.txsm.copyWith(color: titleTextColor),
             ),
           ),
         GestureDetector(
@@ -89,30 +109,31 @@ class _CustomTextFieldState extends State<CustomTextField> {
             height: widget.lines == 1 ? widget.height : null,
             width: widget.width,
             padding: EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: widget.lines == 1 ? 0 : 14,
+              horizontal: horizontalPadding,
+              vertical: widget.lines == 1 ? 0 : verticalPaddingMultiline,
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(widget.radius),
               border: Border.all(
                 color: isFocused
-                    ? AppColors.gray.shade900
-                    : AppColors.gray.shade100,
+                    ? borderColorFocused
+                    : borderColorUnfocused,
+                width: borderWidth,
               ),
             ),
             child: Row(
-              spacing: 12,
+              spacing: iconSpacing,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (widget.leading != null)
                   SvgPicture.asset(
                     widget.leading!,
-                    height: 20,
-                    width: 20,
+                    height: iconSize,
+                    width: iconSize,
                     colorFilter: ColorFilter.mode(
                       isFocused
-                          ? AppColors.gray.shade900
-                          : AppColors.gray.shade300,
+                          ? iconColorFocused
+                          : iconColorUnfocused,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -121,7 +142,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     focusNode: focusNode,
                     controller: widget.controller,
                     maxLines: widget.lines,
-                    cursorColor: AppColors.gray.shade900,
+                    cursorColor: textColor,
                     keyboardType: widget.textInputType,
                     obscureText: isObscured,
                     enabled: !widget.isDisabled && widget.onTap == null,
@@ -132,7 +153,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       });
                     },
                     style: AppTexts.tsmm.copyWith(
-                      color: AppColors.gray.shade900,
+                      color: textColor,
                     ),
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -140,7 +161,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       contentPadding: EdgeInsets.zero,
                       hintText: widget.hintText,
                       hintStyle: AppTexts.tsmr.copyWith(
-                        color: AppColors.gray[300],
+                        color: hintTextColor,
                       ),
                     ),
                   ),
@@ -148,12 +169,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 if (widget.trailing != null)
                   SvgPicture.asset(
                     widget.trailing!,
-                    height: 20,
-                    width: 20,
+                    height: iconSize,
+                    width: iconSize,
                     colorFilter: ColorFilter.mode(
                       isFocused
-                          ? AppColors.gray.shade900
-                          : AppColors.gray.shade300,
+                          ? iconColorFocused
+                          : iconColorUnfocused,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -167,9 +188,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     behavior: HitTestBehavior.translucent,
                     child: SvgPicture.asset(
                       isObscured ? "assets/icons/eye_off.svg" : "assets/icons/eye.svg",
-                      width: 20,
+                      width: iconSize,
                       colorFilter: ColorFilter.mode(
-                        AppColors.gray.shade900,
+                        textColor,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -180,13 +201,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         if (widget.errorText != null)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(horizontal: errorTextPadding),
             child: Text(
               widget.errorText!,
               style: TextStyle(
                 fontVariations: [FontVariation("wght", 400)],
                 fontSize: 12,
-                color: AppColors.red,
+                color: errorTextColor,
               ),
             ),
           ),
