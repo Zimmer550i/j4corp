@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:template/utils/app_colors.dart';
+import 'package:j4corp/utils/app_colors.dart';
 
 class AppTexts {
   // Display

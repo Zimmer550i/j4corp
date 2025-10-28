@@ -1,6 +1,6 @@
 {
-    "name": "template",
-    "short_name": "template",
+    "name": "j4corp",
+    "short_name": "j4corp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

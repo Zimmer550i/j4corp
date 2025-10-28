@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:template/services/shared_prefs_service.dart';
+import 'package:j4corp/services/shared_prefs_service.dart';
 
 class ApiService {
   final String devUrl = "http://192.168.10.18:8001";

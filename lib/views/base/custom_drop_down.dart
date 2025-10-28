@@ -1,7 +1,7 @@
-import 'package:template/utils/app_colors.dart';
+import 'package:j4corp/utils/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:template/utils/app_texts.dart';
-import 'package:template/utils/custom_svg.dart';
+import 'package:j4corp/utils/app_texts.dart';
+import 'package:j4corp/utils/custom_svg.dart';
 
 class CustomDropDown extends StatefulWidget {
   final String? title;
@@ -101,9 +101,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                             )
                           : Text(
                               currentVal!,
-                              style: AppTexts.tsmr.copyWith(
-                                color: textColor,
-                              ),
+                              style: AppTexts.tsmr.copyWith(color: textColor),
                             ),
                       const Spacer(),
                       AnimatedRotation(
@@ -138,7 +136,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
                                 },
                                 child: Container(
                                   height: widget.height,
-                                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: horizontalPadding,
+                                  ),
                                   decoration: BoxDecoration(
                                     border: Border(
                                       top: BorderSide(

@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:template/utils/app_colors.dart';
+import 'package:j4corp/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:template/utils/custom_image_picker.dart';
-import 'package:template/utils/custom_svg.dart';
+import 'package:j4corp/utils/custom_image_picker.dart';
+import 'package:j4corp/utils/custom_svg.dart';
 
 class ProfilePicture extends StatelessWidget {
   final double size;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:template/views/base/custom_app_bar.dart';
-import 'package:template/views/base/custom_bottom_navbar.dart';
-import 'package:template/views/base/custom_button.dart';
-import 'package:template/views/base/custom_drop_down.dart';
-import 'package:template/views/base/custom_text_field.dart';
-import 'package:template/views/base/profile_picture.dart';
+import 'package:j4corp/views/base/custom_app_bar.dart';
+import 'package:j4corp/views/base/custom_bottom_navbar.dart';
+import 'package:j4corp/views/base/custom_button.dart';
+import 'package:j4corp/views/base/custom_drop_down.dart';
+import 'package:j4corp/views/base/custom_text_field.dart';
+import 'package:j4corp/views/base/profile_picture.dart';
 
 class DesignSystem extends StatefulWidget {
   const DesignSystem({super.key});
@@ -45,7 +45,8 @@ class _DesignSystemState extends State<DesignSystem> {
             CustomTextField(isPassword: true),
             CustomDropDown(
               title: "Sample Dropdown",
-              options: ["Options 1", "Options 2"]),
+              options: ["Options 1", "Options 2"],
+            ),
             CustomButton(text: "Button"),
             CustomButton(text: "Secondary Button", isSecondary: true),
           ],

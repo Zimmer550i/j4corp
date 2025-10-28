@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:template/utils/app_colors.dart';
-import 'package:template/utils/custom_svg.dart';
+import 'package:j4corp/utils/app_colors.dart';
+import 'package:j4corp/utils/custom_svg.dart';
 
 class CustomBottomNavbar extends StatelessWidget {
   final int index;

@@ -1,7 +1,7 @@
-import 'package:template/utils/app_colors.dart';
+import 'package:j4corp/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:template/utils/app_texts.dart';
+import 'package:j4corp/utils/app_texts.dart';
 
 class CustomTextField extends StatefulWidget {
   final String? title;
@@ -115,9 +115,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(widget.radius),
               border: Border.all(
-                color: isFocused
-                    ? borderColorFocused
-                    : borderColorUnfocused,
+                color: isFocused ? borderColorFocused : borderColorUnfocused,
                 width: borderWidth,
               ),
             ),
@@ -131,9 +129,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     height: iconSize,
                     width: iconSize,
                     colorFilter: ColorFilter.mode(
-                      isFocused
-                          ? iconColorFocused
-                          : iconColorUnfocused,
+                      isFocused ? iconColorFocused : iconColorUnfocused,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -152,17 +148,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         focusNode.unfocus();
                       });
                     },
-                    style: AppTexts.tsmm.copyWith(
-                      color: textColor,
-                    ),
+                    style: AppTexts.tsmm.copyWith(color: textColor),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
                       hintText: widget.hintText,
-                      hintStyle: AppTexts.tsmr.copyWith(
-                        color: hintTextColor,
-                      ),
+                      hintStyle: AppTexts.tsmr.copyWith(color: hintTextColor),
                     ),
                   ),
                 ),
@@ -172,9 +164,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     height: iconSize,
                     width: iconSize,
                     colorFilter: ColorFilter.mode(
-                      isFocused
-                          ? iconColorFocused
-                          : iconColorUnfocused,
+                      isFocused ? iconColorFocused : iconColorUnfocused,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -187,12 +177,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     },
                     behavior: HitTestBehavior.translucent,
                     child: SvgPicture.asset(
-                      isObscured ? "assets/icons/eye_off.svg" : "assets/icons/eye.svg",
+                      isObscured
+                          ? "assets/icons/eye_off.svg"
+                          : "assets/icons/eye.svg",
                       width: iconSize,
-                      colorFilter: ColorFilter.mode(
-                        textColor,
-                        BlendMode.srcIn,
-                      ),
+                      colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
                     ),
                   ),
               ],

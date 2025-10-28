@@ -1,7 +1,7 @@
-import 'package:template/utils/app_colors.dart';
+import 'package:j4corp/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:template/utils/app_texts.dart';
+import 'package:j4corp/utils/app_texts.dart';
 
 class CustomButton extends StatefulWidget {
   final String text;
@@ -67,8 +67,8 @@ class _CustomButtonState extends State<CustomButton> {
           color: widget.isSecondary
               ? secondaryColor
               : widget.isDisabled
-                  ? disabledColor
-                  : primaryColor,
+              ? disabledColor
+              : primaryColor,
           borderRadius: BorderRadius.circular(widget.radius),
           border: Border.all(color: borderColor),
         ),

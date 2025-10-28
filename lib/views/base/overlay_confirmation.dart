@@ -1,5 +1,5 @@
-import 'package:template/utils/app_colors.dart';
-import 'package:template/views/base/custom_button.dart';
+import 'package:j4corp/utils/app_colors.dart';
+import 'package:j4corp/views/base/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class OverlayConfirmation extends StatelessWidget {
