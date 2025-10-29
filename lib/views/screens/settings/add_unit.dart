@@ -2,61 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
-import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_app_bar.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_date_picker.dart';
 import 'package:j4corp/views/base/custom_drop_down.dart';
 import 'package:j4corp/views/base/custom_text_field.dart';
+import 'package:j4corp/views/base/image_picker_widget.dart';
 
-class Services extends StatefulWidget {
-  final bool existingService;
-  const Services({super.key, this.existingService = false});
+class AddUnit extends StatefulWidget {
+  final bool isExisting;
+  const AddUnit({super.key, this.isExisting = false});
 
   @override
-  State<Services> createState() => _ServicesState();
+  State<AddUnit> createState() => _AddUnitState();
 }
 
-class _ServicesState extends State<Services> {
-  int? servicedBefore;
+class _AddUnitState extends State<AddUnit> {
+  DateTime? birthDay;
 
-  void onSubmit() async {
-    if (widget.existingService) {}
-  }
+  void onSubmit() async {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.existingService
-            ? "Edit Scheduled Service"
-            : "Schedule Service",
-        hasLeading: widget.existingService,
-      ),
+      appBar: CustomAppBar(title: widget.isExisting ? "Edit Unit" : "Add Unit"),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SafeArea(
           child: Column(
             spacing: 16,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(),
+              CustomTextField(title: "VIN", hintText: "Enter VIN"),
+              CustomTextField(title: "Brand", hintText: "Enter Brand"),
+              CustomTextField(title: "Model", hintText: "Enter Model"),
+              CustomTextField(title: "Year", hintText: "Enter Year"),
+              CustomDatePicker(title: "Date of Purchase", callBack: (val) {}),
               CustomDropDown(
-                options: [
-                  "Kawasaki-KLX110R",
-                  "Kawasaki-KLX110R",
-                  "Kawasaki-KLX110R",
-                ],
-                title: "Select Unit",
-              ),
-              CustomTextField(
-                title: "What service do you need?",
-                hintText: "Accessory Installation",
-                lines: 5,
-              ),
-              CustomDropDown(
-                title: "Select Location",
-                hintText: "Select where you want the service",
+                title: "Store/Location",
                 options: [
                   "BMW Motorcycles of San Antonio",
                   "BMG Xtreme Sports",
@@ -68,62 +51,51 @@ class _ServicesState extends State<Services> {
                   "Triumph Houston",
                 ],
               ),
-              CustomDatePicker(callBack: (val) {}, title: "Appointment Date"),
-              Text(
-                "Have we serviced your vehicle before?",
-                style: AppTexts.txsm.copyWith(color: AppColors.gray),
-              ),
-              Row(
-                spacing: 20,
+              Column(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        servicedBefore = 0;
-                      });
-                    },
-                    child: Row(
-                      spacing: 4,
-                      children: [
-                        CustomSvg(
-                          asset:
-                              "assets/icons/radio${servicedBefore == 0 ? "_selected" : ""}.svg",
+                  Row(
+                    children: [
+                      Text(
+                        "Additional Information",
+                        style: AppTexts.txsm.copyWith(color: AppColors.gray),
+                      ),
+                      Text(
+                        " (Optional)",
+                        style: AppTexts.txsm.copyWith(
+                          color: AppColors.gray.shade300,
                         ),
-                        Text(
-                          "Yes",
-                          style: AppTexts.tlgr.copyWith(
-                            color: AppColors.gray.shade300,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        servicedBefore = 1;
-                      });
-                    },
-                    child: Row(
-                      spacing: 4,
-                      children: [
-                        CustomSvg(
-                          asset:
-                              "assets/icons/radio${servicedBefore == 1 ? "_selected" : ""}.svg",
-                        ),
-                        Text(
-                          "No",
-                          style: AppTexts.tlgr.copyWith(
-                            color: AppColors.gray.shade300,
-                          ),
-                        ),
-                      ],
-                    ),
+                  const SizedBox(height: 4),
+                  CustomTextField(
+                    hintText: "Add any important details about the unit",
+                    lines: 5,
                   ),
                 ],
               ),
-              const SizedBox(height: 32),
-              widget.existingService
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Additional Information",
+                        style: AppTexts.txsm.copyWith(color: AppColors.gray),
+                      ),
+                      Text(
+                        " (Optional)",
+                        style: AppTexts.txsm.copyWith(
+                          color: AppColors.gray.shade300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  ImagePickerWidget(),
+                ],
+              ),
+              const SizedBox(height: 0),
+              widget.isExisting
                   ? Row(
                       children: [
                         Expanded(
@@ -152,14 +124,14 @@ class _ServicesState extends State<Services> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
-                                                "Cancel",
+                                                "Delete",
                                                 style: AppTexts.tlgs.copyWith(
                                                   color: Color(0xffE25252),
                                                 ),
                                               ),
                                               const SizedBox(height: 16),
                                               Text(
-                                                "Are you sure you want to cancel the Scheduled Service",
+                                                "Are you sure you want to delete the Unit?",
                                                 style: AppTexts.tmdm,
                                                 textAlign: TextAlign.center,
                                               ),
@@ -170,7 +142,7 @@ class _ServicesState extends State<Services> {
                                                     child: CustomButton(
                                                       onTap: () => Get.back(),
                                                       isSecondary: true,
-                                                      text: "Yes, Cancel",
+                                                      text: "Yes, Delete",
                                                     ),
                                                   ),
                                                   const SizedBox(width: 16),
@@ -193,7 +165,7 @@ class _ServicesState extends State<Services> {
                             },
                             isSecondary: true,
                             padding: 0,
-                            text: "Cancel Appointment",
+                            text: "Delete",
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -206,7 +178,8 @@ class _ServicesState extends State<Services> {
                         ),
                       ],
                     )
-                  : CustomButton(onTap: onSubmit, text: "Submit"),
+                  : CustomButton(onTap: onSubmit, text: "Confirm"),
+              const SizedBox(height: 0),
             ],
           ),
         ),

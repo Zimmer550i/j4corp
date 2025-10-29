@@ -1,131 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
+import 'package:j4corp/views/screens/settings/add_unit.dart';
 
 class VehicleCard extends StatelessWidget {
   const VehicleCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.gray.shade100,
-        borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => AddUnit(isExisting: true));
+      },
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.gray.shade100,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          spacing: 12,
+          children: [
+            AspectRatio(
+              aspectRatio: 2,
+              child: Image.asset("assets/images/bike.jpg"),
+            ),
+            Column(
+              spacing: 8,
+              children: [
+                _buildRichTextRow("Make: ", "BMW"),
+                _buildRichTextRow("Model: ", "G0310R"),
+                _buildRichTextRow("Year: ", "2025"),
+                _buildRichTextRow("VIN: ", "1HGBH41JXMN109186"),
+                _buildRichTextRow("Date of Purchase: ", "11 January 2025"),
+                _buildRichTextRow("Store of Purchase: ", "BMG Xtreme Sports"),
+              ],
+            ),
+          ],
+        ),
       ),
-      child: Column(
-        spacing: 12,
+    );
+  }
+
+  Widget _buildRichTextRow(String label, String value) {
+    return RichText(
+      text: TextSpan(
         children: [
-          AspectRatio(
-            aspectRatio: 2,
-            child: Image.asset("assets/images/bike.jpg"),
+          TextSpan(
+            text: label,
+            style: AppTexts.tsmr.copyWith(color: AppColors.gray.shade700),
           ),
-          Column(
-            spacing: 8,
-            children: [
-              Row(
-                spacing: 4,
-                children: [
-                  Text(
-                    "Make:",
-                    style: AppTexts.tsmr.copyWith(
-                      color: AppColors.gray.shade700,
-                    ),
-                  ),
-                  Text(
-                    "BMW",
-                    style: AppTexts.tsmm.copyWith(
-                      color: AppColors.gray.shade900,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                spacing: 4,
-                children: [
-                  Text(
-                    "Model:",
-                    style: AppTexts.tsmr.copyWith(
-                      color: AppColors.gray.shade700,
-                    ),
-                  ),
-                  Text(
-                    "G0310R",
-                    style: AppTexts.tsmm.copyWith(
-                      color: AppColors.gray.shade900,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                spacing: 4,
-                children: [
-                  Text(
-                    "Year:",
-                    style: AppTexts.tsmr.copyWith(
-                      color: AppColors.gray.shade700,
-                    ),
-                  ),
-                  Text(
-                    "2025",
-                    style: AppTexts.tsmm.copyWith(
-                      color: AppColors.gray.shade900,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                spacing: 4,
-                children: [
-                  Text(
-                    "VIN:",
-                    style: AppTexts.tsmr.copyWith(
-                      color: AppColors.gray.shade700,
-                    ),
-                  ),
-                  Text(
-                    "1HGBH41JXMN109186",
-                    style: AppTexts.tsmm.copyWith(
-                      color: AppColors.gray.shade900,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                spacing: 4,
-                children: [
-                  Text(
-                    "Date of Purchase:",
-                    style: AppTexts.tsmr.copyWith(
-                      color: AppColors.gray.shade700,
-                    ),
-                  ),
-                  Text(
-                    "11 January 2025",
-                    style: AppTexts.tsmm.copyWith(
-                      color: AppColors.gray.shade900,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                spacing: 4,
-                children: [
-                  Text(
-                    "Store of Purchase:",
-                    style: AppTexts.tsmr.copyWith(
-                      color: AppColors.gray.shade700,
-                    ),
-                  ),
-                  Text(
-                    "BMG Xtreme Sports",
-                    style: AppTexts.tsmm.copyWith(
-                      color: AppColors.gray.shade900,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          TextSpan(
+            text: " $value",
+            style: AppTexts.tsmm.copyWith(color: AppColors.gray.shade900),
           ),
         ],
       ),
