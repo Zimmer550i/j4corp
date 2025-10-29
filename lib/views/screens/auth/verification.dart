@@ -5,7 +5,7 @@ import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_button.dart';
-import 'package:j4corp/views/screens/auth/login.dart';
+import 'package:j4corp/views/screens/auth/onboarding.dart';
 import 'package:j4corp/views/screens/auth/reset_password.dart';
 import 'package:pinput/pinput.dart';
 
@@ -24,7 +24,7 @@ class _VerificationState extends State<Verification> {
     if (widget.isResettingPassword) {
       Get.to(() => ResetPassword());
     } else {
-      Get.offAll(() => Login());
+      Get.offAll(() => Onboarding());
     }
   }
 

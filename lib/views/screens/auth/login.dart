@@ -7,6 +7,7 @@ import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_text_field.dart';
+import 'package:j4corp/views/screens/app.dart';
 import 'package:j4corp/views/screens/auth/forgot_password.dart';
 import 'package:j4corp/views/screens/auth/signup.dart';
 
@@ -20,7 +21,9 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool rememberMe = false;
 
-  void onSubmit() async {}
+  void onSubmit() async {
+    Get.offAll(() => App(), routeName: "/app");
+  }
 
   @override
   Widget build(BuildContext context) {

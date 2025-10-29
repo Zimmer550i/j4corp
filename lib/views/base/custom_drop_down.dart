@@ -8,6 +8,7 @@ class CustomDropDown extends StatefulWidget {
   final int? initialPick;
   final String? hintText;
   final List<String> options;
+  final List<String>? address;
   final double height;
   final double? width;
   final double radius;
@@ -18,6 +19,7 @@ class CustomDropDown extends StatefulWidget {
     this.initialPick,
     this.hintText,
     required this.options,
+    this.address,
     this.onChanged,
     this.radius = 8,
     this.height = 46,
@@ -35,7 +37,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
   final double iconSize = 24;
   final double borderWidth = 0.5;
 
-  final Color backgroundColor = AppColors.gray[50]!;
+  final Color backgroundColor = AppColors.gray[25]!;
   final Color borderColorExpanded = AppColors.gray.shade900;
   final Color borderColorCollapsed = AppColors.gray.shade100;
   final Color hintTextColor = AppColors.gray.shade300;
@@ -65,7 +67,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
             padding: EdgeInsets.only(bottom: verticalSpacing),
             child: Text(
               widget.title!,
-              style: AppTexts.txsm.copyWith(color: hintTextColor),
+              style: AppTexts.txsm.copyWith(color: dividerColor),
             ),
           ),
 
@@ -135,9 +137,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
                                   });
                                 },
                                 child: Container(
-                                  height: widget.height,
                                   padding: EdgeInsets.symmetric(
                                     horizontal: horizontalPadding,
+                                    vertical: horizontalPadding,
                                   ),
                                   decoration: BoxDecoration(
                                     border: Border(
@@ -147,9 +149,33 @@ class _CustomDropDownState extends State<CustomDropDown> {
                                       ),
                                     ),
                                   ),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(e, style: AppTexts.tsmr),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: Text(e, style: AppTexts.tsmr),
+                                      ),
+                                      if (widget.address != null)
+                                        Row(
+                                          spacing: 4,
+                                          children: [
+                                            CustomSvg(
+                                              asset: "assets/icons/pin.svg",
+                                            ),
+                                            Text(
+                                              widget.address!.elementAt(
+                                                widget.options.indexOf(e),
+                                              ),
+                                              style: AppTexts.txsr.copyWith(
+                                                color: AppColors.gray.shade600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                    ],
                                   ),
                                 ),
                               );
