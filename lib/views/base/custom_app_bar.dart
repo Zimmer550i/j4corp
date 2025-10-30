@@ -7,7 +7,13 @@ import 'package:j4corp/utils/custom_svg.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool hasLeading;
-  const CustomAppBar({super.key, required this.title, this.hasLeading = true});
+  final Widget? trailing;
+  const CustomAppBar({
+    super.key,
+    required this.title,
+    this.hasLeading = true,
+    this.trailing,
+  });
 
   @override
   Size get preferredSize => Size(double.infinity, kToolbarHeight);
@@ -43,7 +49,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 style: AppTexts.tmdm.copyWith(color: AppColors.gray.shade900),
               ),
             ),
-            const SizedBox(width: 62),
+            const SizedBox(width: 18),
+            trailing ?? const SizedBox(width: 32),
+            const SizedBox(width: 12),
           ],
         ),
       ),

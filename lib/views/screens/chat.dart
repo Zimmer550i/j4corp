@@ -68,53 +68,55 @@ class _ChatState extends State<Chat> {
               ),
             ),
           ),
-          Container(
-            height: 100,
-            width: double.infinity,
-            padding: EdgeInsets.only(left: 16, right: 16, top: 20),
-            decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: AppColors.gray.shade200)),
+          inputField(),
+        ],
+      ),
+    );
+  }
+
+  Container inputField() {
+    return Container(
+      height: 100,
+      width: double.infinity,
+      padding: EdgeInsets.only(left: 16, right: 16, top: 20),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: AppColors.gray.shade200)),
+      ),
+      child: Row(
+        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: TextField(
+              focusNode: focusNode,
+              maxLines: 3,
+              cursorColor: AppColors.gray.shade900,
+              onTapOutside: (event) {
+                setState(() {
+                  focusNode.unfocus();
+                });
+              },
+              style: AppTexts.tsmm.copyWith(color: AppColors.gray.shade900),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+                hintText: "Write your message",
+                hintStyle: AppTexts.tsmr.copyWith(
+                  color: AppColors.gray.shade300,
+                ),
+              ),
             ),
-            child: Row(
-              spacing: 10,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: TextField(
-                    focusNode: focusNode,
-                    maxLines: 3,
-                    cursorColor: AppColors.gray.shade900,
-                    onTapOutside: (event) {
-                      setState(() {
-                        focusNode.unfocus();
-                      });
-                    },
-                    style: AppTexts.tsmm.copyWith(
-                      color: AppColors.gray.shade900,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                      hintText: "Write your message",
-                      hintStyle: AppTexts.tsmr.copyWith(
-                        color: AppColors.gray.shade300,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.gray.shade900,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    "Send",
-                    style: AppTexts.tsmm.copyWith(color: AppColors.white),
-                  ),
-                ),
-              ],
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.gray.shade900,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              "Send",
+              style: AppTexts.tsmm.copyWith(color: AppColors.white),
             ),
           ),
         ],

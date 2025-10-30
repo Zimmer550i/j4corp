@@ -5,7 +5,9 @@ import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/dealerships_widget.dart';
 import 'package:j4corp/views/base/profile_picture.dart';
-import 'package:j4corp/views/screens/notifications.dart';
+import 'package:j4corp/views/screens/home/ai_assistant.dart';
+import 'package:j4corp/views/screens/home/notifications.dart';
+import 'package:j4corp/views/screens/settings/my_garage.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -57,27 +59,37 @@ class Home extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            CustomSvg(
-              asset: "assets/icons/assistant.svg",
-              width: MediaQuery.of(context).size.width,
+            GestureDetector(
+              onTap: () {
+                Get.to(() => AiAssistant());
+              },
+              child: CustomSvg(
+                asset: "assets/icons/assistant.svg",
+                width: MediaQuery.of(context).size.width,
+              ),
             ),
             const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.gray.shade900,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  CustomSvg(asset: "assets/icons/garage.svg", size: 28),
-                  const SizedBox(height: 8),
-                  Text(
-                    "My Garage",
-                    style: AppTexts.tmdr.copyWith(color: AppColors.white),
-                  ),
-                ],
+            GestureDetector(
+              onTap: () {
+                Get.to(() => MyGarage());
+              },
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.gray.shade900,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    CustomSvg(asset: "assets/icons/garage.svg", size: 28),
+                    const SizedBox(height: 8),
+                    Text(
+                      "My Garage",
+                      style: AppTexts.tmdr.copyWith(color: AppColors.white),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
