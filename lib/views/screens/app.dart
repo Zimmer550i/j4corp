@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:j4corp/views/base/custom_bottom_navbar.dart';
 import 'package:j4corp/views/screens/chat.dart';
+import 'package:j4corp/views/screens/home/home.dart';
 import 'package:j4corp/views/screens/sell.dart';
 import 'package:j4corp/views/screens/services.dart';
 import 'package:j4corp/views/screens/settings/settings.dart';
@@ -16,7 +17,7 @@ class _AppState extends State<App> {
   int index = 0;
 
   List<Widget> pages = [
-    FlutterLogo(),
+    Home(),
     Services(),
     Sell(),
     Chat(),

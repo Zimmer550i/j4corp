@@ -117,45 +117,6 @@ class _ChatState extends State<Chat> {
               ],
             ),
           ),
-          // Container(
-          //   width: double.infinity,
-          //   padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 4),
-          //   decoration: BoxDecoration(
-          //     color: AppColors.indigo,
-          //     borderRadius: BorderRadius.only(
-          //       topLeft: Radius.circular(24),
-          //       topRight: Radius.circular(24),
-          //     ),
-          //   ),
-          //   child: SafeArea(
-          //     child: Container(
-          //       height: 50,
-          //       padding: EdgeInsets.symmetric(horizontal: 12),
-          //       decoration: BoxDecoration(
-          //         color: AppColors.gray,
-          //         borderRadius: BorderRadius.circular(12),
-          //       ),
-          //       child: Row(
-          //         children: [
-          //           Expanded(
-          //             child: TextField(
-          //               decoration: InputDecoration(
-          //                 border: InputBorder.none,
-          //                 hintText: "Type your message",
-          //                 hintStyle: AppTexts.tmdr.copyWith(
-          //                   color: AppColors.gray.shade300,
-          //                 ),
-          //               ),
-          //               style: AppTexts.tlgr,
-          //             ),
-          //           ),
-          //           const SizedBox(width: 8),
-          //           CustomSvg(asset: "assets/icons/send.svg"),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
@@ -311,7 +272,10 @@ class _ChatState extends State<Chat> {
                       color: AppColors.gray.shade400,
                     ),
                   ),
-                  CustomSvg(asset: "assets/icons/sent.svg"),
+                  Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: CustomSvg(asset: "assets/icons/sent.svg"),
+                  ),
                 ],
               ),
             ],
