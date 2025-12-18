@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/unit_controller.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
@@ -19,10 +20,97 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  DateTime? birthDay;
+  final unitController = Get.find<UnitController>();
+
+  DateTime? purchaseDate;
+  String? selectedStore;
+
+  // Text editing controllers
+  late TextEditingController vinController;
+  late TextEditingController brandController;
+  late TextEditingController modelController;
+  late TextEditingController yearController;
+  late TextEditingController additionalNotesController;
+
+  @override
+  void initState() {
+    super.initState();
+    vinController = TextEditingController();
+    brandController = TextEditingController();
+    modelController = TextEditingController();
+    yearController = TextEditingController();
+    additionalNotesController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    vinController.dispose();
+    brandController.dispose();
+    modelController.dispose();
+    yearController.dispose();
+    additionalNotesController.dispose();
+    super.dispose();
+  }
 
   void onSubmit() async {
-    Get.offAll(() => App(), routeName: "/app");
+    if (vinController.text.isEmpty ||
+        vinController.text.length < 11 ||
+        vinController.text.length > 25) {
+      Get.snackbar("Error", "VIN must be between 11 and 25 characters");
+      return;
+    }
+
+    if (brandController.text.isEmpty) {
+      Get.snackbar("Error", "Please enter brand");
+      return;
+    }
+
+    if (modelController.text.isEmpty) {
+      Get.snackbar("Error", "Please enter model");
+      return;
+    }
+
+    if (yearController.text.isEmpty) {
+      Get.snackbar("Error", "Please enter year");
+      return;
+    }
+    if (int.tryParse(yearController.text) == null) {
+      Get.snackbar("Error", "Year must be a valid number");
+      return;
+    }
+
+    if (purchaseDate == null) {
+      Get.snackbar("Error", "Please select a purchase date");
+      return;
+    }
+
+    if (selectedStore == null || selectedStore!.isEmpty) {
+      Get.snackbar("Error", "Please select a store/location");
+      return;
+    }
+
+    if (unitController.selectedImage.value == null) {
+      Get.snackbar("Error", "Please select an image");
+      return;
+    }
+
+    final message = await unitController.createUnit(
+      vin: vinController.text,
+      brand: brandController.text,
+      model: modelController.text,
+      year: yearController.text,
+      purchaseDate:
+          "${purchaseDate!.year}-${purchaseDate!.month}-${purchaseDate!.day}",
+      storeLocation: selectedStore!,
+      additionalNotes: additionalNotesController.text,
+      image: unitController.selectedImage.value,
+    );
+
+    if (message == "success") {
+      Get.offAll(() => App(), routeName: "/app");
+    } else {
+      Get.snackbar("Error", message);
+    }
   }
 
   @override
@@ -93,13 +181,34 @@ class _OnboardingState extends State<Onboarding> {
                   child: Column(
                     spacing: 16,
                     children: [
-                      CustomTextField(title: "VIN", hintText: "Enter VIN"),
-                      CustomTextField(title: "Brand", hintText: "Enter Brand"),
-                      CustomTextField(title: "Model", hintText: "Enter Model"),
-                      CustomTextField(title: "Year", hintText: "Enter Year"),
+                      CustomTextField(
+                        title: "VIN",
+                        hintText: "Enter VIN",
+                        controller: vinController,
+                      ),
+                      CustomTextField(
+                        title: "Brand",
+                        hintText: "Enter Brand",
+                        controller: brandController,
+                      ),
+                      CustomTextField(
+                        title: "Model",
+                        hintText: "Enter Model",
+                        controller: modelController,
+                      ),
+                      CustomTextField(
+                        title: "Year",
+                        hintText: "Enter Year",
+                        controller: yearController,
+                      ),
                       CustomDatePicker(
                         title: "Date of Purchase",
-                        callBack: (val) {},
+                        date: purchaseDate,
+                        callBack: (val) {
+                          setState(() {
+                            purchaseDate = val;
+                          });
+                        },
                       ),
                       CustomDropDown(
                         title: "Store/Location",
@@ -113,6 +222,11 @@ class _OnboardingState extends State<Onboarding> {
                           "BMG Xtreme Sports",
                           "Triumph Houston",
                         ],
+                        onChanged: (value) {
+                          setState(() {
+                            selectedStore = value;
+                          });
+                        },
                       ),
                       Column(
                         children: [
@@ -137,6 +251,7 @@ class _OnboardingState extends State<Onboarding> {
                             hintText:
                                 "Add any important details about the unit",
                             lines: 5,
+                            controller: additionalNotesController,
                           ),
                         ],
                       ),
@@ -145,7 +260,7 @@ class _OnboardingState extends State<Onboarding> {
                           Row(
                             children: [
                               Text(
-                                "Additional Information",
+                                "Unit Image",
                                 style: AppTexts.txsm.copyWith(
                                   color: AppColors.gray,
                                 ),
@@ -163,7 +278,13 @@ class _OnboardingState extends State<Onboarding> {
                         ],
                       ),
                       const SizedBox(height: 0),
-                      CustomButton(onTap: onSubmit, text: "Register Unit"),
+                      Obx(
+                        () => CustomButton(
+                          onTap: onSubmit,
+                          text: "Register Unit",
+                          isLoading: unitController.isLoading.value,
+                        ),
+                      ),
                       const SizedBox(height: 0),
                     ],
                   ),
