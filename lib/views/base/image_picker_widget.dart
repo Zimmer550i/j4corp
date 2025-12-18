@@ -1,40 +1,42 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:get/get.dart';
-import 'package:j4corp/controllers/unit_controller.dart';
-import 'package:j4corp/utils/app_colors.dart';
-import 'package:j4corp/utils/app_texts.dart';
-import 'package:j4corp/utils/custom_svg.dart';
 import 'dart:io';
 
-class ImagePickerWidget extends StatelessWidget {
-  final ImagePicker _imagePicker = ImagePicker();
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:j4corp/utils/app_colors.dart';
+import 'package:j4corp/utils/app_texts.dart';
+import 'package:j4corp/utils/custom_image_picker.dart';
+import 'package:j4corp/utils/custom_svg.dart';
 
-  ImagePickerWidget({super.key});
+class ImagePickerWidget extends StatefulWidget {
+  final void Function(File?)? onChanged;
+  const ImagePickerWidget({super.key, this.onChanged});
+
+  @override
+  State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
+}
+
+class _ImagePickerWidgetState extends State<ImagePickerWidget> {
+  File? file;
 
   Future<void> _pickImageFromGallery() async {
-    try {
-      final XFile? pickedFile = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-      );
-      if (pickedFile != null) {
-        Get.find<UnitController>().selectedImage.value = File(pickedFile.path);
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to pick image: $e');
+    file = await customImagePicker(isCircular: false, isSquared: false);
+    setState(() {});
+
+    if (widget.onChanged != null) {
+      widget.onChanged!(file);
     }
   }
 
   Future<void> _pickImageFromCamera() async {
-    try {
-      final XFile? pickedFile = await _imagePicker.pickImage(
-        source: ImageSource.camera,
-      );
-      if (pickedFile != null) {
-        Get.find<UnitController>().selectedImage.value = File(pickedFile.path);
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to capture image: $e');
+    file = await customImagePicker(
+      isCircular: false,
+      isSquared: false,
+      source: ImageSource.camera,
+    );
+    setState(() {});
+
+    if (widget.onChanged != null) {
+      widget.onChanged!(file);
     }
   }
 
@@ -47,6 +49,9 @@ class ImagePickerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.gray.shade100,
           borderRadius: BorderRadius.circular(12),
+          image: file != null
+              ? DecorationImage(image: FileImage(file!), fit: BoxFit.cover)
+              : null,
         ),
         child: Row(
           children: [
@@ -58,20 +63,28 @@ class ImagePickerWidget extends StatelessWidget {
                   children: [
                     CustomSvg(
                       asset: "assets/icons/upload.svg",
-                      color: AppColors.gray.shade300,
+                      color: file != null
+                          ? Colors.white
+                          : AppColors.gray.shade300,
                       size: 36,
                     ),
                     Text(
                       "Select file",
                       style: AppTexts.tmdr.copyWith(
-                        color: AppColors.gray.shade300,
+                        color: file != null
+                            ? Colors.white
+                            : AppColors.gray.shade300,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            Container(height: 100, width: 1, color: AppColors.gray.shade300),
+            Container(
+              height: 100,
+              width: 1,
+              color: file != null ? Colors.white : AppColors.gray.shade300,
+            ),
             Expanded(
               child: InkWell(
                 onTap: _pickImageFromCamera,
@@ -80,13 +93,17 @@ class ImagePickerWidget extends StatelessWidget {
                   children: [
                     CustomSvg(
                       asset: "assets/icons/camera.svg",
-                      color: AppColors.gray.shade300,
+                      color: file != null
+                          ? Colors.white
+                          : AppColors.gray.shade300,
                       size: 36,
                     ),
                     Text(
                       "Capture",
                       style: AppTexts.tmdr.copyWith(
-                        color: AppColors.gray.shade300,
+                        color: file != null
+                            ? Colors.white
+                            : AppColors.gray.shade300,
                       ),
                     ),
                   ],

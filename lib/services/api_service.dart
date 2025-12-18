@@ -60,8 +60,10 @@ class ApiService {
                 (entry.value as File).path,
               ),
             );
-          } else {
+          } else if (entry.value is Map) {
             request.fields[entry.key] = jsonEncode(entry.value);
+          } else {
+            request.fields[entry.key] = entry.value.toString();
           }
         }
 

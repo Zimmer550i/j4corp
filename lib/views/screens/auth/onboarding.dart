@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:j4corp/controllers/unit_controller.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
+import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_date_picker.dart';
@@ -24,6 +26,7 @@ class _OnboardingState extends State<Onboarding> {
 
   DateTime? purchaseDate;
   String? selectedStore;
+  File? image;
 
   // Text editing controllers
   late TextEditingController vinController;
@@ -100,16 +103,17 @@ class _OnboardingState extends State<Onboarding> {
       model: modelController.text,
       year: yearController.text,
       purchaseDate:
-          "${purchaseDate!.year}-${purchaseDate!.month}-${purchaseDate!.day}",
+          "${purchaseDate!.year.toString()}-${purchaseDate!.month.toString()}-${purchaseDate!.day.toString()}",
       storeLocation: selectedStore!,
       additionalNotes: additionalNotesController.text,
-      image: unitController.selectedImage.value,
+      image: image,
     );
 
     if (message == "success") {
+      customSnackbar("Your unit has been added to your Garage", isError: false);
       Get.offAll(() => App(), routeName: "/app");
     } else {
-      Get.snackbar("Error", message);
+      customSnackbar(message);
     }
   }
 

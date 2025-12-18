@@ -43,7 +43,7 @@ class UnitController extends GetxController {
 
       final body = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return "success";
       } else {
         return body['message'] ?? "Something went wrong";

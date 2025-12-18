@@ -10,8 +10,8 @@ import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_text_field.dart';
-import 'package:j4corp/views/screens/app.dart';
 import 'package:j4corp/views/screens/auth/forgot_password.dart';
+import 'package:j4corp/views/screens/auth/onboarding.dart';
 import 'package:j4corp/views/screens/auth/signup.dart';
 import 'package:j4corp/views/screens/auth/verification.dart';
 
@@ -38,7 +38,8 @@ class _LoginState extends State<Login> {
 
     if (message == "success") {
       if (Get.find<UserController>().userData!.isVerified) {
-        Get.offAll(() => App(), routeName: "/app");
+        Get.to(() => Onboarding());
+        // Get.offAll(() => App(), routeName: "/app");
       } else {
         customSnackbar("Please verify your email to proceed");
         auth.resendOtp(emailController.text).then((val) {

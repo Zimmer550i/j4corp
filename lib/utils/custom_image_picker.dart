@@ -4,12 +4,16 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:j4corp/utils/app_colors.dart';
 
-Future<File?> customImagePicker({isCircular = true, isSquared = true}) async {
+Future<File?> customImagePicker({
+  isCircular = true,
+  isSquared = true,
+  ImageSource source = ImageSource.gallery,
+}) async {
   final picker = ImagePicker();
   final cropper = ImageCropper();
 
   final XFile? pickedImage = await picker.pickImage(
-    source: ImageSource.gallery,
+    source: source,
   );
 
   if (pickedImage != null) {
