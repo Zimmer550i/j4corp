@@ -2,8 +2,12 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/auth_controller.dart';
+import 'package:j4corp/controllers/user_controller.dart';
 import 'package:j4corp/utils/custom_svg.dart';
+import 'package:j4corp/utils/system_ui_utils.dart';
 import 'package:j4corp/views/screens/auth/login.dart';
+import 'package:j4corp/views/screens/auth/onboarding.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -13,14 +17,32 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  bool isVerified = false;
+  Duration animationDuration = Duration(seconds: 2);
+
   @override
   void initState() {
     super.initState();
+    setStatusBarLightIcons();
+    verifyToken();
+  }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(Duration(seconds: 2));
-      Get.off(() => Login());
-    });
+  void verifyToken() async {
+    final time = Stopwatch();
+    time.start();
+    isVerified = await Get.find<AuthController>().previouslyLoggedIn();
+    if (isVerified) await Get.find<UserController>().getUserData();
+
+    if (time.elapsed < animationDuration) {
+      await Future.delayed(animationDuration - time.elapsed);
+    }
+
+    if (isVerified) {
+      Get.offAll(() => Onboarding());
+      // Get.offAll(() => App(), routeName: "/app");
+    } else {
+      Get.offAll(() => Login());
+    }
   }
 
   @override

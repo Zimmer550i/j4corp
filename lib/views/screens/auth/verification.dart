@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/auth_controller.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
+import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/screens/auth/onboarding.dart';
@@ -11,20 +13,37 @@ import 'package:pinput/pinput.dart';
 
 class Verification extends StatefulWidget {
   final bool isResettingPassword;
-  const Verification({super.key, this.isResettingPassword = false});
+  final String email;
+  const Verification({
+    super.key,
+    this.isResettingPassword = false,
+    required this.email,
+  });
 
   @override
   State<Verification> createState() => _VerificationState();
 }
 
 class _VerificationState extends State<Verification> {
+  final auth = Get.find<AuthController>();
   final ctrl = TextEditingController();
 
   void onSubmit() async {
-    if (widget.isResettingPassword) {
-      Get.to(() => ResetPassword());
+    final message = await auth.verifyOtp(
+      ctrl.text,
+      isResettingPass: widget.isResettingPassword,
+    );
+
+    if (message == "success") {
+      if (widget.isResettingPassword) {
+        Get.to(() => ResetPassword());
+      } else {
+        Get.back();
+        Get.back();
+        Get.to(() => Onboarding());
+      }
     } else {
-      Get.offAll(() => Onboarding());
+      customSnackbar(message);
     }
   }
 
@@ -79,11 +98,51 @@ class _VerificationState extends State<Verification> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          Text(
-                            "OTP sent to your Email",
-                            style: AppTexts.txsm.copyWith(
-                              color: AppColors.white,
-                            ),
+                          Row(
+                            spacing: 4,
+                            children: [
+                              Text(
+                                "OTP has been sent to your Email",
+                                style: AppTexts.txsm.copyWith(
+                                  color: AppColors.white,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (widget.isResettingPassword) {
+                                    auth.forgetPassword(widget.email).then((
+                                      message,
+                                    ) {
+                                      if (message == "success") {
+                                        customSnackbar(
+                                          "OTP has been sent to ${widget.email}",
+                                        );
+                                      } else {
+                                        customSnackbar(message);
+                                      }
+                                    });
+                                  } else {
+                                    auth.resendOtp(widget.email).then((
+                                      message,
+                                    ) {
+                                      if (message == "success") {
+                                        customSnackbar(
+                                          "OTP has been sent to ${widget.email}",
+                                        );
+                                      } else {
+                                        customSnackbar(message);
+                                      }
+                                    });
+                                  }
+                                },
+                                child: Text(
+                                  "Resend",
+                                  style: AppTexts.txss.copyWith(
+                                    color: AppColors.blue.shade500,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -122,7 +181,13 @@ class _VerificationState extends State<Verification> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  CustomButton(onTap: onSubmit, text: "Verify"),
+                  Obx(
+                    () => CustomButton(
+                      onTap: onSubmit,
+                      isLoading: auth.isLoading.value,
+                      text: "Verify",
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/auth_controller.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
@@ -86,7 +87,9 @@ class Settings extends StatelessWidget {
                             const SizedBox(width: 16),
                             Expanded(
                               child: CustomButton(
-                                onTap: () {},
+                                onTap: () {
+                                  Get.find<AuthController>().logout();
+                                },
                                 text: "Yes",
                                 isSecondary: true,
                               ),

@@ -1,18 +1,35 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/auth_controller.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
+import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_text_field.dart';
-import 'package:j4corp/views/screens/auth/login.dart';
+import 'package:j4corp/views/screens/app.dart';
 
-class ResetPassword extends StatelessWidget {
+class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
 
+  @override
+  State<ResetPassword> createState() => _ResetPasswordState();
+}
+
+class _ResetPasswordState extends State<ResetPassword> {
+  final auth = Get.find<AuthController>();
+  final passCtrl = TextEditingController();
+  final conPassCtrl = TextEditingController();
+
   void onSubmit() async {
-    Get.offAll(() => Login());
+    final message = await auth.resetPassword(passCtrl.text, conPassCtrl.text);
+
+    if (message == "success") {
+      Get.offAll(() => App(), routeName: "/app");
+    } else {
+      customSnackbar(message);
+    }
   }
 
   @override
@@ -81,17 +98,25 @@ class ResetPassword extends StatelessWidget {
                 children: [
                   CustomTextField(
                     title: "New Password",
+                    controller: passCtrl,
                     hintText: "Generate a new password",
                     isPassword: true,
                   ),
                   const SizedBox(height: 24),
                   CustomTextField(
                     title: "Confirm Password",
+                    controller: conPassCtrl,
                     hintText: "Enter the new password",
                     isPassword: true,
                   ),
                   const SizedBox(height: 32),
-                  CustomButton(onTap: onSubmit, text: "Reset Password"),
+                  Obx(
+                    () => CustomButton(
+                      onTap: onSubmit,
+                      isLoading: auth.isLoading.value,
+                      text: "Reset Password",
+                    ),
+                  ),
                 ],
               ),
             ),

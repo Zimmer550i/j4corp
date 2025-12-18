@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:j4corp/services/shared_prefs_service.dart';
 
 class ApiService {
-  final String devUrl = "http://192.168.10.18:8001";
+  final String devUrl = "http://10.10.12.111:8000/";
   final String prodUrl = "";
   static final String imgUrl = "";
   final bool inDevelopment = true;

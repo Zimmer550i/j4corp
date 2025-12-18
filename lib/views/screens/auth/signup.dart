@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/auth_controller.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
+import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_date_picker.dart';
@@ -18,10 +20,69 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  final auth = Get.find<AuthController>();
   DateTime? birthDay;
 
+  // Text editing controllers
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
+  late TextEditingController emailController;
+  late TextEditingController phoneController;
+  late TextEditingController addressController;
+  late TextEditingController zipCodeController;
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
+
+  @override
+  void initState() {
+    super.initState();
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
+    emailController = TextEditingController();
+    phoneController = TextEditingController();
+    addressController = TextEditingController();
+    zipCodeController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    zipCodeController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   void onSubmit() async {
-    Get.to(() => Verification());
+    if (birthDay == null) {
+      Get.snackbar("Error", "Please select a birthday");
+      return;
+    }
+
+    final message = await auth.register(
+      firstNameController.text,
+      lastNameController.text,
+      emailController.text,
+      phoneController.text,
+      addressController.text,
+      zipCodeController.text,
+      birthDay!,
+      passwordController.text,
+      confirmPasswordController.text,
+    );
+
+    if (message == "success") {
+      customSnackbar("OTP has been sent to ${emailController.text}");
+      Get.to(() => Verification(email: emailController.text));
+    } else {
+      customSnackbar(message);
+    }
   }
 
   @override
@@ -122,12 +183,14 @@ class _SignupState extends State<Signup> {
                             child: CustomTextField(
                               title: "First Name",
                               hintText: "Enter first name",
+                              controller: firstNameController,
                             ),
                           ),
                           Expanded(
                             child: CustomTextField(
                               title: "Last Name",
                               hintText: "Enter last name",
+                              controller: lastNameController,
                             ),
                           ),
                         ],
@@ -135,19 +198,23 @@ class _SignupState extends State<Signup> {
                       CustomTextField(
                         title: "Email",
                         hintText: "Enter your email address",
+                        controller: emailController,
                       ),
                       CustomTextField(
                         title: "Phone",
                         hintText: "Enter your phone number",
                         textInputType: TextInputType.number,
+                        controller: phoneController,
                       ),
                       CustomTextField(
                         title: "Address",
                         hintText: "Enter your address",
+                        controller: addressController,
                       ),
                       CustomTextField(
                         title: "ZIP Code",
                         hintText: "Enter your ZIP/Postal Code",
+                        controller: zipCodeController,
                       ),
                       CustomDatePicker(
                         title: "Birthday",
@@ -162,14 +229,22 @@ class _SignupState extends State<Signup> {
                         title: "New Password",
                         hintText: "Generate a new password",
                         isPassword: true,
+                        controller: passwordController,
                       ),
                       CustomTextField(
                         title: "Confirm Password",
                         hintText: "Enter the new password",
                         isPassword: true,
+                        controller: confirmPasswordController,
                       ),
                       const SizedBox(height: 0),
-                      CustomButton(onTap: onSubmit, text: "Register"),
+                      Obx(
+                        () => CustomButton(
+                          onTap: onSubmit,
+                          isLoading: auth.isLoading.value,
+                          text: "Register",
+                        ),
+                      ),
                       const SizedBox(height: 0),
                     ],
                   ),

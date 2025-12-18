@@ -2,14 +2,18 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/auth_controller.dart';
+import 'package:j4corp/controllers/user_controller.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
+import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_text_field.dart';
 import 'package:j4corp/views/screens/app.dart';
 import 'package:j4corp/views/screens/auth/forgot_password.dart';
 import 'package:j4corp/views/screens/auth/signup.dart';
+import 'package:j4corp/views/screens/auth/verification.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -19,10 +23,36 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  bool rememberMe = false;
+  final auth = Get.find<AuthController>();
+
+  final emailController = TextEditingController(text: "wasiul0491@gmail.com");
+  final passController = TextEditingController(text: "wasiul12");
+  bool rememberMe = true;
 
   void onSubmit() async {
-    Get.offAll(() => App(), routeName: "/app");
+    final message = await auth.login(
+      emailController.text,
+      passController.text,
+      rememberMe,
+    );
+
+    if (message == "success") {
+      if (Get.find<UserController>().userData!.isVerified) {
+        Get.offAll(() => App(), routeName: "/app");
+      } else {
+        customSnackbar("Please verify your email to proceed");
+        auth.resendOtp(emailController.text).then((val) {
+          if (val == "success") {
+            customSnackbar("OTP has been sent to ${emailController.text}");
+          } else {
+            customSnackbar(val);
+          }
+        });
+        Get.to(() => Verification(email: emailController.text));
+      }
+    } else {
+      customSnackbar(message);
+    }
   }
 
   @override
@@ -97,11 +127,13 @@ class _LoginState extends State<Login> {
                   children: [
                     CustomTextField(
                       title: "Email",
+                      controller: emailController,
                       hintText: "Enter your email address",
                     ),
                     const SizedBox(height: 24),
                     CustomTextField(
                       title: "Password",
+                      controller: passController,
                       isPassword: true,
                       hintText: "Enter your password",
                     ),
@@ -134,7 +166,9 @@ class _LoginState extends State<Login> {
                         Spacer(),
                         GestureDetector(
                           onTap: () {
-                            Get.to(() => ForgotPassword());
+                            Get.to(
+                              () => ForgotPassword(email: emailController.text),
+                            );
                           },
                           child: Text(
                             "Forgot Password ?",
@@ -148,7 +182,13 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                     const SizedBox(height: 32),
-                    CustomButton(onTap: onSubmit, text: "Log In"),
+                    Obx(
+                      () => CustomButton(
+                        onTap: onSubmit,
+                        isLoading: auth.isLoading.value,
+                        text: "Log In",
+                      ),
+                    ),
                     Spacer(),
                     RichText(
                       textAlign: TextAlign.center,
