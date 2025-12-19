@@ -9,7 +9,8 @@ import 'package:j4corp/utils/custom_svg.dart';
 
 class ImagePickerWidget extends StatefulWidget {
   final void Function(File?)? onChanged;
-  const ImagePickerWidget({super.key, this.onChanged});
+  final String? currentImage;
+  const ImagePickerWidget({super.key, this.onChanged, this.currentImage});
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
@@ -51,6 +52,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           borderRadius: BorderRadius.circular(12),
           image: file != null
               ? DecorationImage(image: FileImage(file!), fit: BoxFit.cover)
+              : widget.currentImage != null
+              ? DecorationImage(
+                  image: NetworkImage(widget.currentImage!),
+                  fit: BoxFit.cover,
+                )
               : null,
         ),
         child: Row(
@@ -63,7 +69,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   children: [
                     CustomSvg(
                       asset: "assets/icons/upload.svg",
-                      color: file != null
+                      color: (file != null || widget.currentImage != null)
                           ? Colors.white
                           : AppColors.gray.shade300,
                       size: 36,
@@ -71,7 +77,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     Text(
                       "Select file",
                       style: AppTexts.tmdr.copyWith(
-                        color: file != null
+                        color: (file != null || widget.currentImage != null)
                             ? Colors.white
                             : AppColors.gray.shade300,
                       ),
@@ -83,7 +89,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             Container(
               height: 100,
               width: 1,
-              color: file != null ? Colors.white : AppColors.gray.shade300,
+              color: (file != null || widget.currentImage != null)
+                  ? Colors.white
+                  : AppColors.gray.shade300,
             ),
             Expanded(
               child: InkWell(
@@ -93,7 +101,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   children: [
                     CustomSvg(
                       asset: "assets/icons/camera.svg",
-                      color: file != null
+                      color: (file != null || widget.currentImage != null)
                           ? Colors.white
                           : AppColors.gray.shade300,
                       size: 36,
@@ -101,7 +109,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     Text(
                       "Capture",
                       style: AppTexts.tmdr.copyWith(
-                        color: file != null
+                        color: (file != null || widget.currentImage != null)
                             ? Colors.white
                             : AppColors.gray.shade300,
                       ),

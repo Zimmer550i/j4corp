@@ -92,11 +92,6 @@ class _OnboardingState extends State<Onboarding> {
       return;
     }
 
-    if (unitController.selectedImage.value == null) {
-      Get.snackbar("Error", "Please select an image");
-      return;
-    }
-
     final message = await unitController.createUnit(
       vin: vinController.text,
       brand: brandController.text,
@@ -278,7 +273,13 @@ class _OnboardingState extends State<Onboarding> {
                             ],
                           ),
                           const SizedBox(height: 4),
-                          ImagePickerWidget(),
+                          ImagePickerWidget(
+                            onChanged: (val) {
+                              setState(() {
+                                image = val;
+                              });
+                            },
+                          ),
                         ],
                       ),
                       const SizedBox(height: 0),

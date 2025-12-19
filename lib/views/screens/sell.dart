@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:j4corp/views/base/custom_app_bar.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_drop_down.dart';
-import 'package:j4corp/views/base/vehicle_card.dart';
 
 class Sell extends StatefulWidget {
   const Sell({super.key});
@@ -40,7 +39,8 @@ class _SellState extends State<Sell> {
                   ],
                   title: "Select Unit",
                 ),
-                if (selected != null) VehicleCard(),
+                
+                // if (selected != null) VehicleCard(),
                 if (selected != null) CustomButton(text: "Submit"),
               ],
             ),

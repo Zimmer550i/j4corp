@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/unit_controller.dart';
+import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/views/base/custom_app_bar.dart';
 import 'package:j4corp/views/base/custom_button.dart';
+import 'package:j4corp/views/base/custom_loading.dart';
 import 'package:j4corp/views/base/vehicle_card.dart';
 import 'package:j4corp/views/screens/settings/add_unit.dart';
 
-class MyGarage extends StatelessWidget {
+class MyGarage extends StatefulWidget {
   const MyGarage({super.key});
+
+  @override
+  State<MyGarage> createState() => _MyGarageState();
+}
+
+class _MyGarageState extends State<MyGarage> {
+  final unit = Get.find<UnitController>();
+
+  @override
+  void initState() {
+    super.initState();
+    unit.getUnits().then((message) {
+      if (message != "success") {
+        customSnackbar(message);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +37,16 @@ class MyGarage extends StatelessWidget {
           SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: SafeArea(
-              child: Column(
-                spacing: 12,
-                children: [
-                  const SizedBox(),
-                  for (int i = 0; i < 10; i++) VehicleCard(),
-                  const SizedBox(height: 70),
-                ],
+              child: Obx(
+                () => Column(
+                  spacing: 12,
+                  children: [
+                    const SizedBox(),
+                    if (unit.isLoading.value) CustomLoading(),
+                    if (!unit.isLoading.value) for (var i in unit.units) VehicleCard(i),
+                    const SizedBox(height: 70),
+                  ],
+                ),
               ),
             ),
           ),

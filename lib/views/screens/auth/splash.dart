@@ -6,8 +6,8 @@ import 'package:j4corp/controllers/auth_controller.dart';
 import 'package:j4corp/controllers/user_controller.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/utils/system_ui_utils.dart';
+import 'package:j4corp/views/screens/app.dart';
 import 'package:j4corp/views/screens/auth/login.dart';
-import 'package:j4corp/views/screens/auth/onboarding.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -38,8 +38,7 @@ class _SplashState extends State<Splash> {
     }
 
     if (isVerified) {
-      Get.offAll(() => Onboarding());
-      // Get.offAll(() => App(), routeName: "/app");
+      Get.offAll(() => App(), routeName: "/app");
     } else {
       Get.offAll(() => Login());
     }
