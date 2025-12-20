@@ -102,27 +102,41 @@ class _AddUnitState extends State<AddUnit> {
       Get.snackbar("Error", "Please select a store/location");
       return;
     }
+    late String message;
 
-    final message = await unitController.createUnit(
-      vin: vinController.text,
-      brand: brandController.text,
-      model: modelController.text,
-      year: yearController.text,
-      purchaseDate:
-          "${purchaseDate!.year.toString()}-${purchaseDate!.month.toString()}-${purchaseDate!.day.toString()}",
-      storeLocation: selectedStore!,
-      additionalNotes: additionalNotesController.text,
-      image: image,
-    );
+    if (widget.unit == null) {
+      message = await unitController.createUnit(
+        vin: vinController.text,
+        brand: brandController.text,
+        model: modelController.text,
+        year: yearController.text,
+        purchaseDate:
+            "${purchaseDate!.year.toString()}-${purchaseDate!.month.toString()}-${purchaseDate!.day.toString()}",
+        storeLocation: selectedStore!,
+        additionalNotes: additionalNotesController.text,
+        image: image,
+      );
+    } else {
+      message = await unitController.updateUnit(
+        id: widget.unit!.id,
+        vin: vinController.text,
+        brand: brandController.text,
+        model: modelController.text,
+        year: yearController.text,
+        purchaseDate:
+            "${purchaseDate!.year.toString()}-${purchaseDate!.month.toString()}-${purchaseDate!.day.toString()}",
+        storeLocation: selectedStore!,
+        additionalNotes: additionalNotesController.text,
+        image: image,
+      );
+    }
 
     if (message == "success") {
       Get.back();
-      unitController.getUnits().then((message) {
-        if (message != "success") {
-          customSnackbar(message);
-        }
-      });
-      customSnackbar("Your unit has been added to your Garage", isError: false);
+      customSnackbar(
+        "Your unit has been ${widget.unit == null ? "added to your Garage" : "updated!"}",
+        isError: false,
+      );
     } else {
       customSnackbar(message);
     }
@@ -250,62 +264,7 @@ class _AddUnitState extends State<AddUnit> {
                               showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return Material(
-                                    type: MaterialType.transparency,
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(32),
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 24,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                "Delete",
-                                                style: AppTexts.tlgs.copyWith(
-                                                  color: Color(0xffE25252),
-                                                ),
-                                              ),
-                                              const SizedBox(height: 16),
-                                              Text(
-                                                "Are you sure you want to delete the Unit?",
-                                                style: AppTexts.tmdm,
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              const SizedBox(height: 24),
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: CustomButton(
-                                                      onTap: () => Get.back(),
-                                                      isSecondary: true,
-                                                      text: "Yes, Delete",
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 16),
-                                                  Expanded(
-                                                    child: CustomButton(
-                                                      onTap: () => Get.back(),
-                                                      text: "No",
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
+                                  return deleteConfirmation();
                                 },
                               );
                             },
@@ -336,6 +295,75 @@ class _AddUnitState extends State<AddUnit> {
                     ),
               const SizedBox(height: 0),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Material deleteConfirmation() {
+    return Material(
+      type: MaterialType.transparency,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 24),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Delete",
+                  style: AppTexts.tlgs.copyWith(color: Color(0xffE25252)),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  "Are you sure you want to delete the Unit?",
+                  style: AppTexts.tmdm,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Obx(
+                        () => CustomButton(
+                          onTap: () async {
+                            final message = await unitController.deleteUnit(
+                              widget.unit!.id,
+                            );
+
+                            if (message == "success") {
+                              if (mounted) {
+                                Get.back();
+                                Get.back();
+                              }
+                              customSnackbar(
+                                "Unit has been deleted!",
+                                isError: false,
+                              );
+                            } else {
+                              customSnackbar(message);
+                            }
+                          },
+                          isLoading: unitController.isDeleting.value,
+                          isSecondary: true,
+                          text: "Yes, Delete",
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: CustomButton(onTap: () => Get.back(), text: "No"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

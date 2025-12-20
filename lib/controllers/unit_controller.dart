@@ -7,6 +7,7 @@ import 'package:j4corp/services/api_service.dart';
 class UnitController extends GetxController {
   final api = ApiService();
   RxBool isLoading = RxBool(false);
+  RxBool isDeleting = RxBool(false);
 
   RxList<Unit> units = RxList.empty();
 
@@ -18,7 +19,7 @@ class UnitController extends GetxController {
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final data = body['data'];
-        
+
         units.clear();
         for (var i in data['results']) {
           units.add(Unit.fromJson(i));
@@ -71,6 +72,11 @@ class UnitController extends GetxController {
       final body = jsonDecode(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = body['data'];
+
+        Unit temp = Unit.fromJson(data);
+        units.insert(0, temp);
+
         return "success";
       } else {
         return body['message'] ?? "Something went wrong";
@@ -79,6 +85,77 @@ class UnitController extends GetxController {
       return e.toString();
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<String> updateUnit({
+    required int id,
+    required String vin,
+    required String brand,
+    required String model,
+    required String year,
+    required String purchaseDate,
+    required String storeLocation,
+    required String additionalNotes,
+    required File? image,
+  }) async {
+    isLoading(true);
+    try {
+      final Map<String, dynamic> data = {
+        'vin': vin,
+        'brand': brand,
+        'model': model,
+        'year': int.parse(year),
+        'purchase_date': purchaseDate,
+        'store_location': storeLocation,
+        'additional_notes': additionalNotes,
+      };
+
+      if (image != null) {
+        data['image'] = image;
+      }
+
+      final response = await api.patch(
+        'v1/unit/register-units/$id/update/',
+        data,
+        authReq: true,
+      );
+
+      final body = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return "success";
+      } else {
+        return body['message'] ?? "Something went wrong";
+      }
+    } catch (e) {
+      return e.toString();
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<String> deleteUnit(int id) async {
+    isDeleting(true);
+    try {
+      final response = await api.delete(
+        'v1/unit/register-units/$id/delete/',
+        authReq: true,
+      );
+
+      final body = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        units.remove(units.firstWhere((val) => val.id == id));
+
+        return "success";
+      } else {
+        return body['message'] ?? "Something went wrong";
+      }
+    } catch (e) {
+      return e.toString();
+    } finally {
+      isDeleting(false);
     }
   }
 }
