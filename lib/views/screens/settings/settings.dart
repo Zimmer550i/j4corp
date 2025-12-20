@@ -34,13 +34,13 @@ class Settings extends StatelessWidget {
               Get.to(() => MyGarage());
             }),
             options("terms", "Terms Of Services", () {
-              Get.to(() => UserInfo(title: "Terms Of Services", data: ""));
+              Get.to(() => UserInfo(title: "Terms Of Services", data: "v1/privacy/terms-conditions/"));
             }),
             options("privacy", "Privacy Policy", () {
-              Get.to(() => UserInfo(title: "Privacy Policy", data: ""));
+              Get.to(() => UserInfo(title: "Privacy Policy", data: "v1/privacy/privacy-policy/"));
             }),
             options("about", "About Us", () {
-              Get.to(() => UserInfo(title: "About Us", data: ""));
+              Get.to(() => UserInfo(title: "About Us", data: "v1/privacy/about-us/"));
             }),
             options("logout", "Logout", () {
               showModalBottomSheet(

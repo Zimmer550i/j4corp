@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:j4corp/utils/custom_image_picker.dart';
 import 'package:j4corp/utils/custom_svg.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfilePicture extends StatelessWidget {
   final double size;
@@ -12,6 +12,8 @@ class ProfilePicture extends StatelessWidget {
   final File? imageFile;
   final bool showLoading;
   final bool isEditable;
+  final Color? borderColor;
+  final double borderWidth;
   final Function(File)? imagePickerCallback;
 
   const ProfilePicture({
@@ -22,6 +24,8 @@ class ProfilePicture extends StatelessWidget {
     this.isEditable = false,
     this.imagePickerCallback,
     this.imageFile,
+    this.borderColor,
+    this.borderWidth = 0,
   });
 
   @override
@@ -43,9 +47,9 @@ class ProfilePicture extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           Container(
-            padding: EdgeInsets.all(2),
+            padding: EdgeInsets.all(borderWidth),
             decoration: BoxDecoration(
-              color: AppColors.gray.shade100,
+              color: borderColor,
               shape: BoxShape.circle,
             ),
             child: ClipRRect(
@@ -61,15 +65,14 @@ class ProfilePicture extends StatelessWidget {
                   ? CachedNetworkImage(
                       imageUrl: image!,
                       progressIndicatorBuilder: (context, url, progress) {
-                        return SizedBox(
-                          width: size,
-                          height: size,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              value: progress.progress,
-                              strokeWidth: 2,
-                              color: AppColors.blue[400],
-                            ),
+                        return Shimmer.fromColors(
+                          baseColor: AppColors.green.shade300,
+                          highlightColor: AppColors.green[25]!,
+                          period: Duration(milliseconds: 800),
+                          child: Container(
+                            height: size,
+                            width: size,
+                            color: Colors.white,
                           ),
                         );
                       },
@@ -77,7 +80,7 @@ class ProfilePicture extends StatelessWidget {
                         return Container(
                           width: size,
                           height: size,
-                          color: AppColors.blue[100],
+                          color: AppColors.green[100],
                           child: Icon(Icons.error, color: Colors.blue),
                         );
                       },
@@ -91,17 +94,9 @@ class ProfilePicture extends StatelessWidget {
                       padding: EdgeInsets.all(size * 0.17),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.blue[300]!),
+                        border: Border.all(color: AppColors.green[300]!),
                       ),
-                      child: Center(
-                        child: SvgPicture.asset(
-                          "assets/icons/bell.svg",
-                          colorFilter: ColorFilter.mode(
-                            AppColors.blue[400]!,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                      ),
+                      child: Center(child: Icon(Icons.error)),
                     ),
             ),
           ),
@@ -110,22 +105,19 @@ class ProfilePicture extends StatelessWidget {
               left: 0,
               right: 0,
               bottom: -12,
-              child: Center(
-                child: Container(
-                  height: 32,
-                  width: 32,
-                  decoration: BoxDecoration(
-                    color: AppColors.blue,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.white),
-                  ),
-
-                  child: Center(
-                    child: CustomSvg(
-                      asset: "assets/icons/edit.svg",
-                      size: 16,
-                      color: AppColors.white,
-                    ),
+              child: Container(
+                height: 32,
+                width: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.green,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white),
+                ),
+                child: Center(
+                  child: CustomSvg(
+                    asset: "assets/icons/edit.svg",
+                    size: 20,
+                    color: Colors.white,
                   ),
                 ),
               ),

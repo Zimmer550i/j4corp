@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:j4corp/controllers/user_controller.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
@@ -15,14 +17,17 @@ class ProfileInformation extends StatefulWidget {
 }
 
 class _ProfileInformationState extends State<ProfileInformation> {
+  final user = Get.find<UserController>();
+
   @override
   void initState() {
     super.initState();
-    setStatusBarLightIcons();
+    user.getUserData();
   }
 
   @override
   Widget build(BuildContext context) {
+    setStatusBarLightIcons();
     return Scaffold(
       body: Column(
         children: [
@@ -112,9 +117,11 @@ class _ProfileInformationState extends State<ProfileInformation> {
                 left:
                     (MediaQuery.of(context).size.width / 2) -
                     (MediaQuery.of(context).size.width / 6),
-                child: ProfilePicture(
-                  image: "https://thispersondoesnotexist.com",
-                  size: MediaQuery.of(context).size.width / 3,
+                child: Obx(
+                  () => ProfilePicture(
+                    image: user.userImage,
+                    size: MediaQuery.of(context).size.width / 3,
+                  ),
                 ),
               ),
             ],
@@ -124,57 +131,62 @@ class _ProfileInformationState extends State<ProfileInformation> {
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Ralph Edwards", style: AppTexts.dsmr),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    CustomSvg(
-                      asset: "assets/icons/mail.svg",
-                      color: AppColors.gray.shade900,
-                    ),
-                    const SizedBox(width: 12),
-                    Text("debbie.baker@example.com", style: AppTexts.tmdr),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    CustomSvg(
-                      asset: "assets/icons/phone.svg",
-                      color: AppColors.gray.shade900,
-                    ),
-                    const SizedBox(width: 12),
-                    Text("(252) 555-0126", style: AppTexts.tmdr),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    CustomSvg(
-                      asset: "assets/icons/pin.svg",
-                      size: 24,
-                      color: AppColors.gray.shade900,
-                    ),
-                    const SizedBox(width: 12),
-                    Text("Fairfield", style: AppTexts.tmdr),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    CustomSvg(
-                      asset: "assets/icons/cake.svg",
-                      color: AppColors.gray.shade900,
-                    ),
-                    const SizedBox(width: 12),
-                    Text("12/06/1999", style: AppTexts.tmdr),
-                  ],
-                ),
-                const SizedBox(height: 12),
-              ],
+            child: Obx(
+              () => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(user.userData!.fullName, style: AppTexts.dsmr),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      CustomSvg(
+                        asset: "assets/icons/mail.svg",
+                        color: AppColors.gray.shade900,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(user.userData!.email, style: AppTexts.tmdr),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      CustomSvg(
+                        asset: "assets/icons/phone.svg",
+                        color: AppColors.gray.shade900,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(user.userData!.phone, style: AppTexts.tmdr),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      CustomSvg(
+                        asset: "assets/icons/pin.svg",
+                        size: 24,
+                        color: AppColors.gray.shade900,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(user.userData!.address, style: AppTexts.tmdr),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      CustomSvg(
+                        asset: "assets/icons/cake.svg",
+                        color: AppColors.gray.shade900,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        DateFormat("d MMMM, yyyy").format(user.userData!.dob),
+                        style: AppTexts.tmdr,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              ),
             ),
           ),
         ],
