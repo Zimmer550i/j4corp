@@ -2,6 +2,7 @@ import 'package:j4corp/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
+import 'package:j4corp/views/base/custom_loading.dart';
 
 class CustomDropDown extends StatefulWidget {
   final String? title;
@@ -12,7 +13,9 @@ class CustomDropDown extends StatefulWidget {
   final double height;
   final double? width;
   final double radius;
-  final void Function(String)? onChanged;
+  final bool isLoading;
+  final void Function(int)? onChanged;
+  final void Function()? addNewCallback;
   const CustomDropDown({
     super.key,
     this.title,
@@ -21,8 +24,10 @@ class CustomDropDown extends StatefulWidget {
     required this.options,
     this.address,
     this.onChanged,
+    this.addNewCallback,
     this.radius = 8,
     this.height = 46,
+    this.isLoading = false,
     this.width,
   });
 
@@ -43,6 +48,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
   final Color hintTextColor = AppColors.gray.shade300;
   final Color textColor = AppColors.gray.shade900;
   final Color dividerColor = AppColors.gray;
+  final scroll = ScrollController();
 
   final Duration animationDuration = const Duration(milliseconds: 100);
 
@@ -122,65 +128,110 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 AnimatedSize(
                   duration: animationDuration,
                   child: isExpanded
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ...widget.options.map((e) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isExpanded = false;
-                                    currentVal = e;
-                                    if (widget.onChanged != null) {
-                                      widget.onChanged!(e);
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: horizontalPadding,
-                                    vertical: horizontalPadding,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      top: BorderSide(
-                                        color: dividerColor,
-                                        width: borderWidth,
-                                      ),
+                      ? ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: widget.height * 4.5,
+                          ),
+                          child: Scrollbar(
+                            controller: scroll,
+                            trackVisibility: true,
+                            thumbVisibility: true,
+                            interactive: true,
+                            child: SingleChildScrollView(
+                              controller: scroll,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (widget.isLoading)
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CustomLoading(),
                                     ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: Text(e, style: AppTexts.tsmr),
-                                      ),
-                                      if (widget.address != null)
-                                        Row(
-                                          spacing: 4,
+                                  for (int i = 0; i < getItemCount(); i++)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isExpanded = false;
+                                          if (i < widget.options.length) {
+                                            currentVal = widget.options
+                                                .elementAt(i);
+                                            if (widget.onChanged != null) {
+                                              widget.onChanged!(i);
+                                            }
+                                          } else {
+                                            widget.addNewCallback!();
+                                          }
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: horizontalPadding,
+                                          vertical: horizontalPadding,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          border: Border(
+                                            top: BorderSide(
+                                              color: dividerColor,
+                                              width: borderWidth,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            CustomSvg(
-                                              asset: "assets/icons/pin.svg",
+                                            Row(
+                                              spacing: 10,
+                                              children: [
+                                                if (widget.options.length == i)
+                                                  CustomSvg(
+                                                    asset:
+                                                        "assets/icons/plus.svg",
+                                                    color:
+                                                        AppColors.gray.shade900,
+                                                  ),
+                                                Expanded(
+                                                  child: Text(
+                                                    widget.options.length == i
+                                                        ? "Add New"
+                                                        : widget.options
+                                                              .elementAt(i),
+                                                    style: AppTexts.tsmr,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            Text(
-                                              widget.address!.elementAt(
-                                                widget.options.indexOf(e),
+                                            if (widget.address != null)
+                                              Row(
+                                                spacing: 4,
+                                                children: [
+                                                  CustomSvg(
+                                                    asset:
+                                                        "assets/icons/pin.svg",
+                                                  ),
+                                                  Text(
+                                                    widget.address!.elementAt(
+                                                      i,
+                                                    ),
+                                                    style: AppTexts.txsr
+                                                        .copyWith(
+                                                          color: AppColors
+                                                              .gray
+                                                              .shade600,
+                                                        ),
+                                                  ),
+                                                ],
                                               ),
-                                              style: AppTexts.txsr.copyWith(
-                                                color: AppColors.gray.shade600,
-                                              ),
-                                            ),
                                           ],
                                         ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                          ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
                         )
                       : SizedBox(height: 0, width: double.infinity),
                 ),
@@ -190,5 +241,11 @@ class _CustomDropDownState extends State<CustomDropDown> {
         ),
       ],
     );
+  }
+
+  int getItemCount() {
+    return widget.addNewCallback != null
+        ? widget.options.length + 1
+        : widget.options.length;
   }
 }

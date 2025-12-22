@@ -29,7 +29,11 @@ class _SellState extends State<Sell> {
                 CustomDropDown(
                   onChanged: (val) {
                     setState(() {
-                      selected = val;
+                      selected = [
+                              "BMW Motorcycles of San Antonio",
+                              "BMG Xtreme Sports",
+                              "Triumph Houston",
+                            ][val];
                     });
                   },
                   options: [

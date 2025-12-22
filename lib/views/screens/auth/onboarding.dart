@@ -223,7 +223,11 @@ class _OnboardingState extends State<Onboarding> {
                         ],
                         onChanged: (value) {
                           setState(() {
-                            selectedStore = value;
+                            selectedStore = [
+                              "BMW Motorcycles of San Antonio",
+                              "BMG Xtreme Sports",
+                              "Triumph Houston",
+                            ][value];
                           });
                         },
                       ),

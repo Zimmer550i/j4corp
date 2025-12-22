@@ -60,7 +60,7 @@ class _ScheduledServicesState extends State<ScheduledServices> {
                             children: [
                               _buildRichTextRow(
                                 "Service Date:",
-                                DateFormat("dd MMMM, yyyy").format(i.date),
+                                DateFormat("dd MMMM, yyyy").format(i.appointmentDate),
                               ),
                               _buildRichTextRow("Unit:", i.modelName),
                               _buildRichTextRow(
@@ -70,7 +70,7 @@ class _ScheduledServicesState extends State<ScheduledServices> {
                               const SizedBox(height: 4),
                               CustomButton(
                                 onTap: () {
-                                  Get.to(() => Services(existingService: true));
+                                  Get.to(() => Services(service: i,));
                                 },
                                 text: "View Details",
                               ),

@@ -124,6 +124,12 @@ class UnitController extends GetxController {
       final body = jsonDecode(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = body['data'];
+
+        int index = units.indexWhere((val) => val.id == id);
+        units.removeAt(index);
+        units.insert(index, Unit.fromJson(data));
+
         return "success";
       } else {
         return body['message'] ?? "Something went wrong";

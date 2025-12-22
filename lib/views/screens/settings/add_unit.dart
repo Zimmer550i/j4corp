@@ -199,7 +199,11 @@ class _AddUnitState extends State<AddUnit> {
                 ],
                 onChanged: (value) {
                   setState(() {
-                    selectedStore = value;
+                    selectedStore = [
+                      "BMW Motorcycles of San Antonio",
+                      "BMG Xtreme Sports",
+                      "Triumph Houston",
+                    ][value];
                   });
                 },
               ),

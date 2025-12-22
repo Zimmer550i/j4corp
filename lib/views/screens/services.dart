@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/models/service.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
@@ -8,10 +9,11 @@ import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_date_picker.dart';
 import 'package:j4corp/views/base/custom_drop_down.dart';
 import 'package:j4corp/views/base/custom_text_field.dart';
+import 'package:j4corp/views/base/unit_drop_down.dart';
 
 class Services extends StatefulWidget {
-  final bool existingService;
-  const Services({super.key, this.existingService = false});
+  final Service? service;
+  const Services({super.key, this.service});
 
   @override
   State<Services> createState() => _ServicesState();
@@ -20,18 +22,16 @@ class Services extends StatefulWidget {
 class _ServicesState extends State<Services> {
   int? servicedBefore;
 
-  void onSubmit() async {
-    if (widget.existingService) {}
-  }
+  void onSubmit() async {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: widget.existingService
+        title: widget.service != null
             ? "Edit Scheduled Service"
             : "Schedule Service",
-        hasLeading: widget.existingService,
+        hasLeading: widget.service != null,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -41,14 +41,7 @@ class _ServicesState extends State<Services> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(),
-              CustomDropDown(
-                options: [
-                  "Kawasaki-KLX110R",
-                  "Kawasaki-KLX110R",
-                  "Kawasaki-KLX110R",
-                ],
-                title: "Select Unit",
-              ),
+              UnitDropDown(hintText: "hintText"),
               CustomTextField(
                 title: "What service do you need?",
                 hintText: "Accessory Installation",
@@ -123,7 +116,7 @@ class _ServicesState extends State<Services> {
                 ],
               ),
               const SizedBox(height: 32),
-              widget.existingService
+              widget.service != null
                   ? Row(
                       children: [
                         Expanded(

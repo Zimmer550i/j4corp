@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/user_controller.dart';
+import 'package:j4corp/services/api_service.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
@@ -19,40 +21,46 @@ class Home extends StatelessWidget {
         titleSpacing: 0,
         backgroundColor: AppColors.white,
         surfaceTintColor: Colors.transparent,
-        title: Row(
-          children: [
-            const SizedBox(width: 16),
-            ProfilePicture(
-              image: "https://thispersondoesnotexist.com",
-              size: 36,
-            ),
-            const SizedBox(width: 8),
-            RichText(
-              text: TextSpan(
-                text: "Hi, ",
-                style: AppTexts.tlgr.copyWith(color: AppColors.gray),
-                children: [
-                  TextSpan(
-                    text: "Jenny",
-                    style: AppTexts.tlgm.copyWith(color: AppColors.gray),
+        title: Obx(() {
+          final user = Get.find<UserController>();
+
+          return Row(
+            children: [
+              const SizedBox(width: 16),
+              ProfilePicture(
+                image: ApiService.getImgUrl(user.userData!.profilePic),
+                size: 36,
+              ),
+              const SizedBox(width: 8),
+              RichText(
+                text: TextSpan(
+                  text: "Hi, ",
+                  style: AppTexts.tlgr.copyWith(color: AppColors.gray),
+                  children: [
+                    TextSpan(
+                      text: user.userData!.firstName,
+                      style: AppTexts.tlgm.copyWith(color: AppColors.gray),
+                    ),
+                  ],
+                ),
+              ),
+              Spacer(),
+              InkWell(
+                onTap: () {
+                  Get.to(() => Notifications());
+                },
+                child: const SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: Center(
+                    child: CustomSvg(asset: "assets/icons/bell.svg"),
                   ),
-                ],
+                ),
               ),
-            ),
-            Spacer(),
-            InkWell(
-              onTap: () {
-                Get.to(() => Notifications());
-              },
-              child: const SizedBox(
-                height: 40,
-                width: 40,
-                child: Center(child: CustomSvg(asset: "assets/icons/bell.svg")),
-              ),
-            ),
-            const SizedBox(width: 16),
-          ],
-        ),
+              const SizedBox(width: 16),
+            ],
+          );
+        }),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16),
