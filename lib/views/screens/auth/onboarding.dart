@@ -9,9 +9,9 @@ import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_date_picker.dart';
-import 'package:j4corp/views/base/custom_drop_down.dart';
 import 'package:j4corp/views/base/custom_text_field.dart';
 import 'package:j4corp/views/base/image_picker_widget.dart';
+import 'package:j4corp/views/base/location_drop_down.dart';
 import 'package:j4corp/views/screens/app.dart';
 
 class Onboarding extends StatefulWidget {
@@ -209,25 +209,10 @@ class _OnboardingState extends State<Onboarding> {
                           });
                         },
                       ),
-                      CustomDropDown(
-                        title: "Store/Location",
-                        options: [
-                          "BMW Motorcycles of San Antonio",
-                          "BMG Xtreme Sports",
-                          "Triumph Houston",
-                        ],
-                        address: [
-                          "BMW Motorcycles of San Antonio",
-                          "BMG Xtreme Sports",
-                          "Triumph Houston",
-                        ],
+                      LocationDropDown(
                         onChanged: (value) {
                           setState(() {
-                            selectedStore = [
-                              "BMW Motorcycles of San Antonio",
-                              "BMG Xtreme Sports",
-                              "Triumph Houston",
-                            ][value];
+                            selectedStore = value;
                           });
                         },
                       ),
