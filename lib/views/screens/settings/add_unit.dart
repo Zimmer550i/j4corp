@@ -356,6 +356,7 @@ class _AddUnitState extends State<AddUnit> {
                           },
                           isLoading: unitController.isDeleting.value,
                           isSecondary: true,
+                          padding: 0,
                           text: "Yes, Delete",
                         ),
                       ),

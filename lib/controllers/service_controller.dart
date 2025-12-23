@@ -8,6 +8,7 @@ class ServiceController extends GetxController {
   final api = ApiService();
 
   RxBool isLoading = RxBool(false);
+  RxBool isDeleting = RxBool(false);
   RxList<Service> services = RxList.empty();
 
   Future<String> fetchServices() async {
@@ -72,6 +73,7 @@ class ServiceController extends GetxController {
 
   Future<String> updateService(
     int id,
+    int unitId,
     String details,
     String location,
     DateTime date,
@@ -80,6 +82,7 @@ class ServiceController extends GetxController {
     isLoading(true);
     try {
       final response = await api.patch("v1/unit/services/$id/", {
+        "unit": unitId,
         "details": details,
         "location": location,
         "appointment_date": "${date.year}-${date.month}-${date.day}",
@@ -102,6 +105,27 @@ class ServiceController extends GetxController {
       return e.toString();
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<String> deleteService(int id) async {
+    isDeleting(true);
+    try {
+      final response = await api.delete("v1/unit/services/$id/", authReq: true);
+      final body = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        int index = services.indexWhere((val) => val.id == id);
+        services.removeAt(index);
+
+        return "success";
+      } else {
+        return body['message'] ?? "Something went wrong!";
+      }
+    } catch (e) {
+      return e.toString();
+    } finally {
+      isDeleting(false);
     }
   }
 }

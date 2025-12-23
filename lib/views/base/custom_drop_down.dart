@@ -6,6 +6,7 @@ import 'package:j4corp/views/base/custom_loading.dart';
 
 class CustomDropDown extends StatefulWidget {
   final String? title;
+  final String? pickedOption;
   final int? initialPick;
   final String? hintText;
   final List<String> options;
@@ -20,6 +21,7 @@ class CustomDropDown extends StatefulWidget {
     super.key,
     this.title,
     this.initialPick,
+    this.pickedOption,
     this.hintText,
     required this.options,
     this.address,
@@ -100,7 +102,12 @@ class _CustomDropDownState extends State<CustomDropDown> {
                   child: Row(
                     children: [
                       SizedBox(width: horizontalPadding),
-                      currentVal == null || isExpanded
+                      widget.pickedOption != null
+                          ? Text(
+                              widget.pickedOption!,
+                              style: AppTexts.tsmr.copyWith(color: textColor),
+                            )
+                          : currentVal == null || isExpanded
                           ? Text(
                               widget.hintText ?? "Select One",
                               style: AppTexts.tsmr.copyWith(
