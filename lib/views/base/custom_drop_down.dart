@@ -7,7 +7,6 @@ import 'package:j4corp/views/base/custom_loading.dart';
 class CustomDropDown extends StatefulWidget {
   final String? title;
   final String? pickedOption;
-  final int? initialPick;
   final String? hintText;
   final List<String> options;
   final List<String>? address;
@@ -20,7 +19,6 @@ class CustomDropDown extends StatefulWidget {
   const CustomDropDown({
     super.key,
     this.title,
-    this.initialPick,
     this.pickedOption,
     this.hintText,
     required this.options,
@@ -54,15 +52,11 @@ class _CustomDropDownState extends State<CustomDropDown> {
 
   final Duration animationDuration = const Duration(milliseconds: 100);
 
-  String? currentVal;
   bool isExpanded = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialPick != null) {
-      currentVal = widget.options[widget.initialPick!];
-    }
   }
 
   @override
@@ -107,16 +101,11 @@ class _CustomDropDownState extends State<CustomDropDown> {
                               widget.pickedOption!,
                               style: AppTexts.tsmr.copyWith(color: textColor),
                             )
-                          : currentVal == null || isExpanded
-                          ? Text(
+                          : Text(
                               widget.hintText ?? "Select One",
                               style: AppTexts.tsmr.copyWith(
                                 color: hintTextColor,
                               ),
-                            )
-                          : Text(
-                              currentVal!,
-                              style: AppTexts.tsmr.copyWith(color: textColor),
                             ),
                       const Spacer(),
                       AnimatedRotation(
@@ -160,8 +149,6 @@ class _CustomDropDownState extends State<CustomDropDown> {
                                         setState(() {
                                           isExpanded = false;
                                           if (i < widget.options.length) {
-                                            currentVal = widget.options
-                                                .elementAt(i);
                                             if (widget.onChanged != null) {
                                               widget.onChanged!(i);
                                             }

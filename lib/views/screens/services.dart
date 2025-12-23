@@ -11,8 +11,8 @@ import 'package:j4corp/utils/custom_svg.dart';
 import 'package:j4corp/views/base/custom_app_bar.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_date_picker.dart';
-import 'package:j4corp/views/base/custom_drop_down.dart';
 import 'package:j4corp/views/base/custom_text_field.dart';
+import 'package:j4corp/views/base/location_drop_down.dart';
 import 'package:j4corp/views/base/unit_drop_down.dart';
 
 class Services extends StatefulWidget {
@@ -39,6 +39,10 @@ class _ServicesState extends State<Services> {
   }
 
   void onSubmit() async {
+    if (date == null || location == null || selectedUnit == null) {
+      customSnackbar("Please fill-in the informations");
+      return;
+    }
     late String message;
     if (widget.service == null) {
       message = await service.createService(
@@ -120,29 +124,13 @@ class _ServicesState extends State<Services> {
                 hintText: "Accessory Installation",
                 lines: 5,
               ),
-              CustomDropDown(
+              LocationDropDown(
                 onChanged: (val) {
                   setState(() {
-                    location = [
-                      "BMW Motorcycles of San Antonio",
-                      "BMG Xtreme Sports",
-                      "Triumph Houston",
-                    ][val];
+                    location = val;
                   });
                 },
-                pickedOption: location,
-                title: "Select Location",
                 hintText: "Select where you want the service",
-                options: [
-                  "BMW Motorcycles of San Antonio",
-                  "BMG Xtreme Sports",
-                  "Triumph Houston",
-                ],
-                address: [
-                  "BMW Motorcycles of San Antonio",
-                  "BMG Xtreme Sports",
-                  "Triumph Houston",
-                ],
               ),
               CustomDatePicker(
                 callBack: (val) {

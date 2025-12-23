@@ -164,4 +164,26 @@ class UnitController extends GetxController {
       isDeleting(false);
     }
   }
+
+  Future<String> sellUnit(int id, String info) async {
+    isLoading(true);
+    try {
+      final response = await api.post('v1/unit/sell-units/', {
+        "unit": id,
+        "additional_details": info,
+      }, authReq: true);
+
+      final body = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return "success";
+      } else {
+        return body['message'] ?? "Something went wrong";
+      }
+    } catch (e) {
+      return e.toString();
+    } finally {
+      isLoading(false);
+    }
+  }
 }

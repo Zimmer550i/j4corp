@@ -9,9 +9,9 @@ import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/views/base/custom_app_bar.dart';
 import 'package:j4corp/views/base/custom_button.dart';
 import 'package:j4corp/views/base/custom_date_picker.dart';
-import 'package:j4corp/views/base/custom_drop_down.dart';
 import 'package:j4corp/views/base/custom_text_field.dart';
 import 'package:j4corp/views/base/image_picker_widget.dart';
+import 'package:j4corp/views/base/location_drop_down.dart';
 
 class AddUnit extends StatefulWidget {
   final Unit? unit;
@@ -184,26 +184,11 @@ class _AddUnitState extends State<AddUnit> {
                   });
                 },
               ),
-              CustomDropDown(
-                title: "Store/Location",
-                hintText: widget.unit?.storeLocation,
-                options: [
-                  "BMW Motorcycles of San Antonio",
-                  "BMG Xtreme Sports",
-                  "Triumph Houston",
-                ],
-                address: [
-                  "BMW Motorcycles of San Antonio",
-                  "BMG Xtreme Sports",
-                  "Triumph Houston",
-                ],
+              LocationDropDown(
+                initial: widget.unit?.storeLocation,
                 onChanged: (value) {
                   setState(() {
-                    selectedStore = [
-                      "BMW Motorcycles of San Antonio",
-                      "BMG Xtreme Sports",
-                      "Triumph Houston",
-                    ][value];
+                    selectedStore = value;
                   });
                 },
               ),

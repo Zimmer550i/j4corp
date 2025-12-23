@@ -28,10 +28,12 @@ class UnitDropDown extends StatelessWidget {
           }
         });
       }
-
-      String? pickedOption = unit.units
-          .firstWhere((val) => val.id == selectedUnit)
-          .model;
+      String? pickedOption;
+      if (selectedUnit != null) {
+        pickedOption = unit.units
+            .firstWhere((val) => val.id == selectedUnit)
+            .model;
+      }
       return CustomDropDown(
         onChanged: (val) {
           final selectedUnit = unit.units.elementAt(val);
