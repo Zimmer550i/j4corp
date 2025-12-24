@@ -22,11 +22,30 @@ class _ChatState extends State<Chat> {
 
   List<Widget> messages = [];
   FocusNode focusNode = FocusNode();
+  late ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
     chat.initChat();
+
+    scrollController = ScrollController();
+    scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 100) {
+      chat.fetchMessages(loadNext: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(_onScroll);
+    scrollController.dispose();
+    chat.closeConnection();
+    super.dispose();
   }
 
   @override
@@ -67,6 +86,7 @@ class _ChatState extends State<Chat> {
           Expanded(
             child: SingleChildScrollView(
               reverse: true,
+              controller: scrollController,
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: SafeArea(
                 minimum: EdgeInsets.only(bottom: 20),
@@ -74,7 +94,11 @@ class _ChatState extends State<Chat> {
                 child: Obx(
                   () => Column(
                     children: [
-                      if (chat.isLoading.value) CustomLoading(),
+                      if (chat.isLoading.value)
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: CustomLoading(),
+                        ),
                       for (int i = 0; i < chat.messages.length; i++)
                         getMessages(i),
                     ],

@@ -25,6 +25,7 @@ class ChatController extends GetxController {
   RxList<MessageModel> messages = RxList.empty();
 
   RxBool isLoading = RxBool(false);
+  RxnInt next = RxnInt();
 
   int reconnectCount = 0;
   final int maxReconnectAttempts = 10;
@@ -50,9 +51,7 @@ class ChatController extends GetxController {
     }
   }
 
-  void endChat() {
-    
-  }
+  void endChat() {}
 
   /// ⚙️ Initializes the WebSocket connection
   Future<void> _initWebSocket() async {
@@ -63,6 +62,7 @@ class ChatController extends GetxController {
       final wsUrl = "$_wsBaseUrl/ws/chat/$_roomId/?token=$_token";
       debugPrint('🔌 Connecting to WebSocket: $wsUrl');
 
+      socket?.close();
       socket = await WebSocket.connect(wsUrl);
       isConnected.value = true;
       debugPrint('✅ WebSocket Connected');
@@ -87,12 +87,6 @@ class ChatController extends GetxController {
             case 'message':
               _handleIncomingMessage(jsonData);
               break;
-            case 'read':
-              _handleReadReceipt(jsonData);
-              break;
-            case 'typing':
-              _handleTypingIndicator(jsonData);
-              break;
             case 'error':
               debugPrint('❌ Server error: ${jsonData['error']}');
               break;
@@ -111,7 +105,6 @@ class ChatController extends GetxController {
       onDone: () {
         debugPrint('🔌 WebSocket disconnected');
         isConnected.value = false;
-        _scheduleReconnect();
       },
     );
   }
@@ -134,7 +127,6 @@ class ChatController extends GetxController {
     });
   }
 
-  /// Handle incoming message
   void _handleIncomingMessage(Map<String, dynamic> data) {
     try {
       final messageData = data['message'];
@@ -152,20 +144,6 @@ class ChatController extends GetxController {
     }
   }
 
-  /// Handle read receipt
-  void _handleReadReceipt(Map<String, dynamic> data) {
-    debugPrint('👀 Message read by user: ${data['user_id']}');
-    // Handle read receipt logic here
-  }
-
-  /// Handle typing indicator
-  void _handleTypingIndicator(Map<String, dynamic> data) {
-    final isTyping = data['is_typing'] ?? false;
-    debugPrint('${data['user_id']} is ${isTyping ? 'typing' : 'not typing'}');
-    // Handle typing indicator logic here
-  }
-
-  /// Send message to WebSocket server
   void sendMessage({required String text}) {
     if (socket == null || !isConnected.value) {
       debugPrint(
@@ -222,23 +200,6 @@ class ChatController extends GetxController {
     }
   }
 
-  /// Send typing indicator
-  void sendTypingIndicator(int userId, bool isTyping) {
-    if (socket == null || !isConnected.value) {
-      debugPrint("⚠️ Cannot send typing indicator: WebSocket is not connected");
-      return;
-    }
-
-    final payload = {
-      "type": "typing",
-      "user_id": userId,
-      "is_typing": isTyping,
-    };
-
-    socket?.add(jsonEncode(payload));
-    debugPrint('✍️ Typing indicator sent: $isTyping');
-  }
-
   /// Close WebSocket connection
   void closeConnection() {
     socket?.close();
@@ -271,21 +232,36 @@ class ChatController extends GetxController {
     }
   }
 
-  Future<String> fetchMessages() async {
+  Future<String> fetchMessages({bool loadNext = false}) async {
+    if (loadNext && next.value == null) return "success";
+    if (isLoading.value) return "success";
     isLoading(true);
     try {
       final res = await api.get(
         "v1/chat/rooms/$_roomId/messages/",
+        queryParams: loadNext && next.value != null
+            ? {"page": next.value.toString()}
+            : null,
         authReq: true,
       );
 
       final body = jsonDecode(res.body);
 
       if (res.statusCode == 200) {
-        messages.clear();
-        final List<dynamic> dataList = body['results'];
-        final newItems = dataList.map((e) => MessageModel.fromJson(e)).toList();
-        messages.addAll(newItems);
+        if (!loadNext) {
+          messages.clear();
+          final List<dynamic> dataList = body['results'];
+          final newItems = dataList
+              .map((e) => MessageModel.fromJson(e))
+              .toList();
+          messages.addAll(newItems);
+        } else {
+          for (var i in body['results']) {
+            messages.insert(0, MessageModel.fromJson(i));
+          }
+        }
+
+        next.value = body['next'];
 
         return "success";
       } else {
