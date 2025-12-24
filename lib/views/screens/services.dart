@@ -130,6 +130,7 @@ class _ServicesState extends State<Services> {
                     location = val;
                   });
                 },
+                initial: location,
                 hintText: "Select where you want the service",
               ),
               CustomDatePicker(

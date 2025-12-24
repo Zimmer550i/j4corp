@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:j4corp/controllers/chat_controller.dart';
+import 'package:j4corp/controllers/user_controller.dart';
+import 'package:j4corp/models/message_model.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
+import 'package:j4corp/views/base/custom_loading.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -12,18 +16,21 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
+  final chat = Get.find<ChatController>();
+  final text = TextEditingController();
+  final userId = Get.find<UserController>().userData!.userId;
+
   List<Widget> messages = [];
   FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    getMessages();
+    chat.initChat();
   }
 
   @override
   Widget build(BuildContext context) {
-    getMessages();
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -64,7 +71,15 @@ class _ChatState extends State<Chat> {
               child: SafeArea(
                 minimum: EdgeInsets.only(bottom: 20),
                 bottom: false,
-                child: Column(children: messages),
+                child: Obx(
+                  () => Column(
+                    children: [
+                      if (chat.isLoading.value) CustomLoading(),
+                      for (int i = 0; i < chat.messages.length; i++)
+                        getMessages(i),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -89,6 +104,7 @@ class _ChatState extends State<Chat> {
           Expanded(
             child: TextField(
               focusNode: focusNode,
+              controller: text,
               maxLines: 3,
               cursorColor: AppColors.gray.shade900,
               onTapOutside: (event) {
@@ -108,15 +124,23 @@ class _ChatState extends State<Chat> {
               ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.gray.shade900,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              "Send",
-              style: AppTexts.tsmm.copyWith(color: AppColors.white),
+          GestureDetector(
+            onTap: () {
+              if (text.text.trim() != "") {
+                chat.sendMessage(text: text.text);
+                text.clear();
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColors.gray.shade900,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "Send",
+                style: AppTexts.tsmm.copyWith(color: AppColors.white),
+              ),
             ),
           ),
         ],
@@ -124,40 +148,30 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  void getMessages() {
-    messages.clear();
-    messages.addAll([
-      recieveMessage("Hey, do you know what time is it where you are?"),
-      sendMessage("t’s morning in Tokyo 😎"),
-      recieveMessage("What does it look like in Japan?", hasNext: true),
-      recieveMessage("Do you like it?", hasPrev: true),
-      sendMessage("Absolutely loving it!", hasNext: true),
-      recieveMessage("Hey, do you know what time is it where you are?"),
-      sendMessage("t’s morning in Tokyo 😎"),
-      recieveMessage("What does it look like in Japan?", hasNext: true),
-      recieveMessage("Do you like it?", hasPrev: true),
-      sendMessage("Absolutely loving it!", hasNext: true),
-      recieveMessage("Hey, do you know what time is it where you are?"),
-      sendMessage("t’s morning in Tokyo 😎"),
-      recieveMessage("What does it look like in Japan?", hasNext: true),
-      recieveMessage("Do you like it?", hasPrev: true),
-      sendMessage("Absolutely loving it!", hasNext: true),
-      recieveMessage("Hey, do you know what time is it where you are?"),
-      sendMessage("t’s morning in Tokyo 😎"),
-      recieveMessage("What does it look like in Japan?", hasNext: true),
-      recieveMessage("Do you like it?", hasPrev: true),
-      sendMessage("Absolutely loving it!", hasNext: true),
-      recieveMessage("Hey, do you know what time is it where you are?"),
-      sendMessage("t’s morning in Tokyo 😎"),
-      recieveMessage("What does it look like in Japan?", hasNext: true),
-      recieveMessage("Do you like it?", hasPrev: true),
-      sendMessage("Absolutely loving it!", hasNext: true),
-      recieveMessage("Hey, do you know what time is it where you are?"),
-      sendMessage("t’s morning in Tokyo 😎"),
-      recieveMessage("What does it look like in Japan?", hasNext: true),
-      recieveMessage("Do you like it?", hasPrev: true),
-      sendMessage("Absolutely loving it!", hasNext: true),
-    ]);
+  Widget getMessages(int i) {
+    int messageLength = chat.messages.length;
+
+    MessageModel message = chat.messages.elementAt(i);
+    MessageModel? prevMessage = i != 0 ? chat.messages.elementAt(i - 1) : null;
+    MessageModel? nextMessage = i < messageLength - 1
+        ? chat.messages.elementAt(i + 1)
+        : null;
+
+    if (message.senderId == userId) {
+      return sendMessage(
+        message.text,
+        hasNext: nextMessage != null && nextMessage.senderId == userId,
+        hasPrev: prevMessage != null && prevMessage.senderId == userId,
+        isRead: message.isRead,
+        isTemp: message.id == -1,
+      );
+    } else {
+      return recieveMessage(
+        message.text,
+        hasNext: nextMessage != null && nextMessage.senderId != userId,
+        hasPrev: prevMessage != null && prevMessage.senderId != userId,
+      );
+    }
   }
 
   Widget recieveMessage(
@@ -228,6 +242,8 @@ class _ChatState extends State<Chat> {
     String? messgae, {
     bool hasPrev = false,
     bool hasNext = false,
+    bool isRead = false,
+    bool isTemp = false,
   }) {
     return Align(
       alignment: Alignment.centerRight,
@@ -274,10 +290,14 @@ class _ChatState extends State<Chat> {
                       color: AppColors.gray.shade400,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: CustomSvg(asset: "assets/icons/sent.svg"),
-                  ),
+                  if (!isTemp)
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: CustomSvg(
+                        asset: "assets/icons/sent.svg",
+                        color: isRead ? AppColors.blue : AppColors.gray,
+                      ),
+                    ),
                 ],
               ),
             ],
