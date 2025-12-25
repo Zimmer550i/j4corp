@@ -4,17 +4,17 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:j4corp/services/shared_prefs_service.dart';
 
-class ApiService {
-  final String devUrl = "http://10.10.12.111:8000/";
+class AiApiService {
+  final String devUrl = "http://10.10.12.46:8001";
   final String prodUrl = "";
-  static final String imgUrl = "http://10.10.12.111:8000";
+  static final String imgUrl = "http://10.10.12.46:8001";
   final bool inDevelopment = true;
   final bool showAPICalls = true;
 
   late final String baseUrl;
   int callCount = 0;
 
-  ApiService() {
+  AiApiService() {
     baseUrl = inDevelopment ? devUrl : prodUrl;
   }
 

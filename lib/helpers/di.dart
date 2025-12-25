@@ -8,6 +8,7 @@ import 'package:j4corp/controllers/chat_controller.dart';
 import 'package:j4corp/controllers/service_controller.dart';
 import 'package:j4corp/controllers/unit_controller.dart';
 import 'package:j4corp/controllers/user_controller.dart';
+import 'package:j4corp/controllers/ai_chat_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controllers/localization_controller.dart';
 import '../controllers/theme_controller.dart';
@@ -28,6 +29,7 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.put(UnitController());
   Get.put(ServiceController());
   Get.put(ChatController());
+  Get.put(AiChatController());
 
   //Retrieving localized data
   Map<String, Map<String, String>> _languages = Map();
