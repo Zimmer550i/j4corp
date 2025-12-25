@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:j4corp/controllers/unit_controller.dart';
+import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/custom_snackbar.dart';
 import 'package:j4corp/views/base/custom_app_bar.dart';
 import 'package:j4corp/views/base/custom_button.dart';
@@ -43,7 +44,15 @@ class _MyGarageState extends State<MyGarage> {
                   children: [
                     const SizedBox(),
                     if (unit.isLoading.value) CustomLoading(),
-                    if (!unit.isLoading.value) for (var i in unit.units) VehicleCard(i),
+                    if (unit.units.isEmpty && !unit.isLoading.value)
+                      Center(
+                        child: Text(
+                          "No Vehicles in your garange",
+                          style: TextStyle(fontSize: 12, color: AppColors.gray),
+                        ),
+                      ),
+                    if (!unit.isLoading.value)
+                      for (var i in unit.units) VehicleCard(i),
                     const SizedBox(height: 70),
                   ],
                 ),

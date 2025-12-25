@@ -40,13 +40,24 @@ class _ScheduledServicesState extends State<ScheduledServices> {
           child: Obx(
             () => service.isLoading.value
                 ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomLoading(),
-                )
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomLoading(),
+                  )
                 : Column(
                     spacing: 12,
                     children: [
                       const SizedBox(),
+
+                      if (service.services.isEmpty && !service.isLoading.value)
+                        Center(
+                          child: Text(
+                            "No services has been scheduled",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.gray,
+                            ),
+                          ),
+                        ),
                       for (var i in service.services)
                         Container(
                           padding: EdgeInsets.all(12),
@@ -60,7 +71,9 @@ class _ScheduledServicesState extends State<ScheduledServices> {
                             children: [
                               _buildRichTextRow(
                                 "Service Date:",
-                                DateFormat("dd MMMM, yyyy").format(i.appointmentDate),
+                                DateFormat(
+                                  "dd MMMM, yyyy",
+                                ).format(i.appointmentDate),
                               ),
                               _buildRichTextRow("Unit:", i.modelName),
                               _buildRichTextRow(
@@ -70,7 +83,7 @@ class _ScheduledServicesState extends State<ScheduledServices> {
                               const SizedBox(height: 4),
                               CustomButton(
                                 onTap: () {
-                                  Get.to(() => Services(service: i,));
+                                  Get.to(() => Services(service: i));
                                 },
                                 text: "View Details",
                               ),

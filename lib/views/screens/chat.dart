@@ -58,15 +58,15 @@ class _ChatState extends State<Chat> {
         title: Row(
           children: [
             const SizedBox(width: 16),
-            GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Center(
-                child: CustomSvg(asset: "assets/icons/back.svg", size: 24),
-              ),
-            ),
-            const SizedBox(width: 8),
+            // GestureDetector(
+            //   onTap: () {
+            //     Get.back();
+            //   },
+            //   child: Center(
+            //     child: CustomSvg(asset: "assets/icons/back.svg", size: 24),
+            //   ),
+            // ),
+            // const SizedBox(width: 8),
             Container(
               height: 40,
               width: 40,

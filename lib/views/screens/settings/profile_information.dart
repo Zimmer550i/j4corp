@@ -5,7 +5,6 @@ import 'package:j4corp/controllers/user_controller.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:j4corp/utils/app_texts.dart';
 import 'package:j4corp/utils/custom_svg.dart';
-import 'package:j4corp/utils/system_ui_utils.dart';
 import 'package:j4corp/views/base/profile_picture.dart';
 import 'package:j4corp/views/screens/settings/edit_profile.dart';
 
@@ -27,7 +26,6 @@ class _ProfileInformationState extends State<ProfileInformation> {
 
   @override
   Widget build(BuildContext context) {
-    setStatusBarLightIcons();
     return Scaffold(
       body: Column(
         children: [
@@ -135,7 +133,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
               () => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(user.userData!.fullName, style: AppTexts.dsmr),
+                  Text(user.userData!.fullName, style: AppTexts.dsms),
                   const SizedBox(height: 16),
                   Row(
                     children: [
@@ -144,7 +142,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                         color: AppColors.gray.shade900,
                       ),
                       const SizedBox(width: 12),
-                      Text(user.userData!.email, style: AppTexts.tmdr),
+                      Expanded(child: Text(user.userData!.email, style: AppTexts.tmdr)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -155,7 +153,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                         color: AppColors.gray.shade900,
                       ),
                       const SizedBox(width: 12),
-                      Text(user.userData!.phone, style: AppTexts.tmdr),
+                      Expanded(child: Text(user.userData!.phone, style: AppTexts.tmdr)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -167,7 +165,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                         color: AppColors.gray.shade900,
                       ),
                       const SizedBox(width: 12),
-                      Text(user.userData!.address, style: AppTexts.tmdr),
+                      Expanded(child: Text(user.userData!.address, style: AppTexts.tmdr)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -178,9 +176,11 @@ class _ProfileInformationState extends State<ProfileInformation> {
                         color: AppColors.gray.shade900,
                       ),
                       const SizedBox(width: 12),
-                      Text(
-                        DateFormat("d MMMM, yyyy").format(user.userData!.dob),
-                        style: AppTexts.tmdr,
+                      Expanded(
+                        child: Text(
+                          DateFormat("d MMMM, yyyy").format(user.userData!.dob),
+                          style: AppTexts.tmdr,
+                        ),
                       ),
                     ],
                   ),

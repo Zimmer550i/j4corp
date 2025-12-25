@@ -54,7 +54,7 @@ class _UserInfoState extends State<UserInfo> {
                       CustomNetworkedImage(
                         radius: 0,
                         url: data!['image'],
-                        width: double.infinity,
+                        width: MediaQuery.of(context).size.width,
                       ),
                       Padding(
                         padding: EdgeInsets.only(

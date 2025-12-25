@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:j4corp/controllers/auth_controller.dart';
 import 'package:j4corp/controllers/user_controller.dart';
 import 'package:j4corp/utils/custom_svg.dart';
-import 'package:j4corp/utils/system_ui_utils.dart';
 import 'package:j4corp/views/screens/app.dart';
 import 'package:j4corp/views/screens/auth/login.dart';
 
@@ -23,7 +22,6 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    setStatusBarLightIcons();
     verifyToken();
   }
 
