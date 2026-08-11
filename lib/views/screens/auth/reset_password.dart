@@ -28,7 +28,7 @@ class _ResetPasswordState extends State<ResetPassword> {
     if (message == "success") {
       Get.offAll(() => App(), routeName: "/app");
     } else {
-      customSnackbar(message);
+      customSnackbar(message, isDarkBackground: true);
     }
   }
 

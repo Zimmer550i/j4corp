@@ -78,10 +78,13 @@ class _SignupState extends State<Signup> {
     );
 
     if (message == "success") {
-      customSnackbar("OTP has been sent to ${emailController.text}");
+      customSnackbar(
+        "OTP has been sent to ${emailController.text}",
+        isDarkBackground: true,
+      );
       Get.to(() => Verification(email: emailController.text));
     } else {
-      customSnackbar(message);
+      customSnackbar(message, isDarkBackground: true);
     }
   }
 

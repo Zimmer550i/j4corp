@@ -105,10 +105,14 @@ class _OnboardingState extends State<Onboarding> {
     );
 
     if (message == "success") {
-      customSnackbar("Your unit has been added to your Garage", isError: false);
+      customSnackbar(
+        "Your unit has been added to your Garage",
+        isDarkBackground: true,
+        isError: false,
+      );
       Get.offAll(() => App(), routeName: "/app");
     } else {
-      customSnackbar(message);
+      customSnackbar(message, isDarkBackground: true);
     }
   }
 

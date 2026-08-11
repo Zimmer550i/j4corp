@@ -27,6 +27,7 @@ class Verification extends StatefulWidget {
 class _VerificationState extends State<Verification> {
   final auth = Get.find<AuthController>();
   final ctrl = TextEditingController();
+  bool isResending = false;
 
   void onSubmit() async {
     final message = await auth.verifyOtp(
@@ -43,7 +44,7 @@ class _VerificationState extends State<Verification> {
         Get.to(() => Onboarding());
       }
     } else {
-      customSnackbar(message);
+      customSnackbar(message, isDarkBackground: true);
     }
   }
 
@@ -108,39 +109,65 @@ class _VerificationState extends State<Verification> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async {
+                                  if (isResending) return;
+                                  setState(() {
+                                    isResending = true;
+                                  });
                                   if (widget.isResettingPassword) {
-                                    auth.forgetPassword(widget.email).then((
+                                    await auth.forgetPassword(widget.email).then((
                                       message,
                                     ) {
                                       if (message == "success") {
                                         customSnackbar(
                                           "OTP has been sent to ${widget.email}",
+                                          isDarkBackground: true,
                                         );
                                       } else {
-                                        customSnackbar(message);
+                                        customSnackbar(
+                                          message,
+                                          isDarkBackground: true,
+                                        );
                                       }
                                     });
                                   } else {
-                                    auth.resendOtp(widget.email).then((
+                                    await auth.resendOtp(widget.email).then((
                                       message,
                                     ) {
                                       if (message == "success") {
                                         customSnackbar(
                                           "OTP has been sent to ${widget.email}",
+                                          isDarkBackground: true,
                                         );
                                       } else {
-                                        customSnackbar(message);
+                                        customSnackbar(
+                                          message,
+                                          isDarkBackground: true,
+                                        );
                                       }
                                     });
                                   }
+                                  setState(() {
+                                    isResending = false;
+                                  });
                                 },
-                                child: Text(
-                                  "Resend",
-                                  style: AppTexts.txss.copyWith(
-                                    color: AppColors.blue.shade500,
-                                  ),
-                                ),
+                                child: !isResending
+                                    ? Text(
+                                        "Resend",
+                                        style: AppTexts.txss.copyWith(
+                                          color: AppColors.blue.shade500,
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        width: 50,
+                                        height: 5,
+                                        child: LinearProgressIndicator(
+                                          color: AppColors.indigo,
+                                          borderRadius: BorderRadius.circular(
+                                            99,
+                                          ),
+                                        ),
+                                      ),
                               ),
                             ],
                           ),

@@ -25,6 +25,7 @@ Future<File?> customImagePicker({
           toolbarColor: AppColors.black,
           toolbarWidgetColor: Colors.blue[50],
           backgroundColor: AppColors.black,
+          // ignore: deprecated_member_use
           statusBarColor: AppColors.blue,
           cropStyle: isCircular ? CropStyle.circle : CropStyle.rectangle,
           hideBottomControls: isSquared,

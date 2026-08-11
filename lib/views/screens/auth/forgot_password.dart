@@ -34,6 +34,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     if (message == "success") {
       customSnackbar(
         "OTP has been sent to ${emailController.text}",
+        isDarkBackground: true,
         isError: false,
       );
       Get.to(
@@ -43,7 +44,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
       );
     } else {
-      customSnackbar(message);
+      customSnackbar(message, isDarkBackground: true);
     }
   }
 

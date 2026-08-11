@@ -40,18 +40,24 @@ class _LoginState extends State<Login> {
       if (Get.find<UserController>().userData!.isVerified) {
         Get.offAll(() => App(), routeName: "/app");
       } else {
-        customSnackbar("Please verify your email to proceed");
+        customSnackbar(
+          "Please verify your email to proceed",
+          isDarkBackground: true,
+        );
         auth.resendOtp(emailController.text).then((val) {
           if (val == "success") {
-            customSnackbar("OTP has been sent to ${emailController.text}");
+            customSnackbar(
+              "OTP has been sent to ${emailController.text}",
+              isDarkBackground: true,
+            );
           } else {
-            customSnackbar(val);
+            customSnackbar(val, isDarkBackground: true);
           }
         });
         Get.to(() => Verification(email: emailController.text));
       }
     } else {
-      customSnackbar(message);
+      customSnackbar(message, isDarkBackground: true);
     }
   }
 
