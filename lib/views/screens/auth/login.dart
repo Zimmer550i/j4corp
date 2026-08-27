@@ -199,7 +199,7 @@ class _LoginState extends State<Login> {
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        text: "By signing up, you agree to the",
+                        text: "By signing in, you agree to the",
                         style: AppTexts.txsr,
                         children: [
                           TextSpan(

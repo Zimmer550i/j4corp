@@ -159,21 +159,78 @@ class _AddUnitState extends State<AddUnit> {
                 title: "VIN",
                 hintText: "Enter VIN",
                 controller: vinController,
+                textFormatter: (oldValue, newValue) {
+                  final text = newValue.text.toUpperCase();
+
+                  // Only allow A-Z and 0-9
+                  final filtered = text.replaceAll(RegExp(r'[^A-Z0-9]'), '');
+
+                  // Maximum 25 characters
+                  if (filtered.length > 25) {
+                    return oldValue;
+                  }
+
+                  return newValue.copyWith(
+                    text: filtered,
+                    selection: TextSelection.collapsed(offset: filtered.length),
+                  );
+                },
               ),
               CustomTextField(
                 title: "Brand",
                 hintText: "Enter Brand",
                 controller: brandController,
+                textFormatter: (oldValue, newValue) {
+                  // Allow letters, numbers and spaces
+                  final filtered = newValue.text.replaceAll(
+                    RegExp(r'[^a-zA-Z0-9 ]'),
+                    '',
+                  );
+
+                  return newValue.copyWith(
+                    text: filtered,
+                    selection: TextSelection.collapsed(offset: filtered.length),
+                  );
+                },
               ),
               CustomTextField(
                 title: "Model",
                 hintText: "Enter Model",
                 controller: modelController,
+                textFormatter: (oldValue, newValue) {
+                  // Allow letters, numbers, spaces, dots and hyphens
+                  final filtered = newValue.text.replaceAll(
+                    RegExp(r'[^a-zA-Z0-9 .-]'),
+                    '',
+                  );
+
+                  return newValue.copyWith(
+                    text: filtered,
+                    selection: TextSelection.collapsed(offset: filtered.length),
+                  );
+                },
               ),
               CustomTextField(
                 title: "Year",
                 hintText: "Enter Year",
                 controller: yearController,
+                textFormatter: (oldValue, newValue) {
+                  // Only allow numbers
+                  final filtered = newValue.text.replaceAll(
+                    RegExp(r'[^0-9]'),
+                    '',
+                  );
+
+                  // Maximum 4 digits
+                  if (filtered.length > 4) {
+                    return oldValue;
+                  }
+
+                  return newValue.copyWith(
+                    text: filtered,
+                    selection: TextSelection.collapsed(offset: filtered.length),
+                  );
+                },
               ),
               CustomDatePicker(
                 title: "Date of Purchase",

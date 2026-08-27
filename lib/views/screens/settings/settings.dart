@@ -33,8 +33,8 @@ class Settings extends StatelessWidget {
             options("garage", "My Garage", () {
               Get.to(() => MyGarage());
             }),
-            options("terms", "Terms Of Services", () {
-              Get.to(() => UserInfo(title: "Terms Of Services", data: "v1/privacy/terms-conditions/"));
+            options("terms", "Terms Of Service", () {
+              Get.to(() => UserInfo(title: "Terms Of Service", data: "v1/privacy/terms-conditions/"));
             }),
             options("privacy", "Privacy Policy", () {
               Get.to(() => UserInfo(title: "Privacy Policy", data: "v1/privacy/privacy-policy/"));

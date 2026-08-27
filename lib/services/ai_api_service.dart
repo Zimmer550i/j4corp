@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:j4corp/controllers/auth_controller.dart';
 import 'package:j4corp/services/shared_prefs_service.dart';
 
 class AiApiService {
@@ -9,7 +11,7 @@ class AiApiService {
   final String prodUrl = "";
   static final String imgUrl = "http://10.10.12.46:8001";
   final bool inDevelopment = true;
-  final bool showAPICalls = true;
+  final bool showAPICalls = false;
 
   late final String baseUrl;
   int callCount = 0;
@@ -237,12 +239,14 @@ class AiApiService {
 
   Future<void> setToken(String token) async {
     await SharedPrefsService.set('token', token);
-    debugPrint('💾 Token Saved: $token');
+    if (kDebugMode) {
+      debugPrint('💾 Token Saved: $token');
+    }
   }
 
   void _checkTokenExpiry(bool authReq, http.Response response) {
     if (response.statusCode == 401 && authReq) {
-      // Get.find<AuthController>().logout();
+      Get.find<AuthController>().logout();
     }
   }
 }

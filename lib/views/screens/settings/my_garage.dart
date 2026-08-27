@@ -47,7 +47,7 @@ class _MyGarageState extends State<MyGarage> {
                     if (unit.units.isEmpty && !unit.isLoading.value)
                       Center(
                         child: Text(
-                          "No Vehicles in your garange",
+                          "No Vehicles in your garage",
                           style: TextStyle(fontSize: 12, color: AppColors.gray),
                         ),
                       ),

@@ -85,45 +85,48 @@ class _CustomButtonState extends State<CustomButton> {
                   ),
                 ),
               )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                spacing: 8,
-                children: [
-                  if (widget.leading != null)
-                    SvgPicture.asset(
-                      widget.leading!,
-                      height: widget.iconSize,
-                      width: widget.iconSize,
-                      colorFilter: ColorFilter.mode(
-                        widget.isSecondary
+            : FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 8,
+                  children: [
+                    if (widget.leading != null)
+                      SvgPicture.asset(
+                        widget.leading!,
+                        height: widget.iconSize,
+                        width: widget.iconSize,
+                        colorFilter: ColorFilter.mode(
+                          widget.isSecondary
+                              ? secondaryTextColor
+                              : primaryTextColor,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    Text(
+                      widget.text,
+                      style: AppTexts.tsmm.copyWith(
+                        fontSize: widget.fontSize,
+                        color: widget.isSecondary
                             ? secondaryTextColor
                             : primaryTextColor,
-                        BlendMode.srcIn,
                       ),
                     ),
-                  Text(
-                    widget.text,
-                    style: AppTexts.tsmm.copyWith(
-                      fontSize: widget.fontSize,
-                      color: widget.isSecondary
-                          ? secondaryTextColor
-                          : primaryTextColor,
-                    ),
-                  ),
-                  if (widget.trailing != null)
-                    SvgPicture.asset(
-                      widget.trailing!,
-                      height: widget.iconSize,
-                      width: widget.iconSize,
-                      colorFilter: ColorFilter.mode(
-                        widget.isSecondary
-                            ? secondaryTextColor
-                            : primaryTextColor,
-                        BlendMode.srcIn,
+                    if (widget.trailing != null)
+                      SvgPicture.asset(
+                        widget.trailing!,
+                        height: widget.iconSize,
+                        width: widget.iconSize,
+                        colorFilter: ColorFilter.mode(
+                          widget.isSecondary
+                              ? secondaryTextColor
+                              : primaryTextColor,
+                          BlendMode.srcIn,
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
       ),
     );

@@ -102,8 +102,8 @@ class _ServicesState extends State<Services> {
         hasLeading: widget.service != null,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SafeArea(
           child: Column(
             spacing: 16,
             crossAxisAlignment: CrossAxisAlignment.start,

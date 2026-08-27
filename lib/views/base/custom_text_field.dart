@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:j4corp/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -18,6 +19,8 @@ class CustomTextField extends StatefulWidget {
   final bool isPassword;
   final int lines;
   final void Function()? onTap;
+  final TextEditingValue Function(TextEditingValue, TextEditingValue)?
+  textFormatter;
   const CustomTextField({
     super.key,
     this.title,
@@ -33,6 +36,7 @@ class CustomTextField extends StatefulWidget {
     this.onTap,
     this.errorText,
     this.height = 46,
+    this.textFormatter,
     this.width,
   });
 
@@ -135,6 +139,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   ),
                 Expanded(
                   child: TextField(
+                    inputFormatters: [
+                      if (widget.textFormatter != null)
+                        TextInputFormatter.withFunction(
+                          (widget.textFormatter!),
+                        ),
+                    ],
                     focusNode: focusNode,
                     controller: widget.controller,
                     maxLines: widget.lines,
